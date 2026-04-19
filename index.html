@@ -614,9 +614,9 @@ input:focus { border-color: var(--terra); }
 // ═══════════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════════
-const HOST_PIN   = '3123';
-const POLL_MS    = 2500;
-const ROOT       = 'nwc-sim2';
+const HOST_PIN = '3123';
+const POLL_MS = 2500;
+const ROOT = 'nwc-sim2';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyD5l5AQZpDRmn9hS8SuYqy_4WSE_K4wokU",
@@ -634,10 +634,10 @@ const ROUNDS = [
     scenario: "Your main game was supposed to launch in Q3. The lead developer says it needs 6 more months. No revenue is coming in. Monthly operating costs are PLN 3M — that's PLN 18M total over 6 months. The board must decide.",
     options: [
       {
-        letter:"A", main:"Keep all 45 staff at full speed",
-        effect:"CA: −PLN 18M (cash burn)  |  CL: unchanged  |  NWC: −18M",
-        cashΔ:−18, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
-        explains:[
+        letter: "A", main: "Keep all 45 staff at full speed",
+        effect: "CA: −PLN 18M (cash burn)  |  CL: unchanged  |  NWC: −18M",
+        cashΔ: -18, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 0,
+        explains: [
           "PLN 18M cash paid out over 6 months for salaries and running costs",
           "Current Assets fall — less cash in the bank",
           "No liabilities changed — this is pure cash burn, nothing else",
@@ -645,10 +645,10 @@ const ROUNDS = [
         ]
       },
       {
-        letter:"B", main:"Cut 12 contractors, save PLN 6M total",
-        effect:"CA: −PLN 12M (reduced burn)  |  CL: unchanged  |  NWC: −12M",
-        cashΔ:−12, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
-        explains:[
+        letter: "B", main: "Cut 12 contractors, save PLN 6M total",
+        effect: "CA: −PLN 12M (reduced burn)  |  CL: unchanged  |  NWC: −12M",
+        cashΔ: -12, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 0,
+        explains: [
           "PLN 12M cash paid — PLN 6M saved vs Option A by cutting contractors",
           "Only 3 extra months delay instead of 6",
           "NWC falls less — still solidly conservative",
@@ -656,10 +656,10 @@ const ROUNDS = [
         ]
       },
       {
-        letter:"C", main:"Pause dev, cut 20 staff, save PLN 10M",
-        effect:"CA: −PLN 8M  |  CL: unchanged  |  NWC: −8M (reputational risk)",
-        cashΔ:−8, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
-        explains:[
+        letter: "C", main: "Pause dev, cut 20 staff, save PLN 10M",
+        effect: "CA: −PLN 8M  |  CL: unchanged  |  NWC: −8M (reputational risk)",
+        cashΔ: -8, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 0,
+        explains: [
           "Only PLN 8M burned — best NWC outcome short-term",
           "BUT: 20 redundancies risk losing key talent permanently",
           "Total delay becomes 9 months — misses key launch window",
@@ -667,17 +667,17 @@ const ROUNDS = [
         ]
       }
     ],
-    lesson:"Cash burn directly reduces Current Assets. No liabilities changed. NWC falls 1-for-1 with every PLN leaving the bank."
+    lesson: "Cash burn directly reduces Current Assets. No liabilities changed. NWC falls 1-for-1 with every PLN leaving the bank."
   },
   {
     title: "Pre-Orders Flood In",
     scenario: "Despite the delay, pre-orders explode. PLN 15M arrives in your bank account from customers who paid upfront. The money is in the bank right now. The board must decide what to do with it.",
     options: [
       {
-        letter:"A", main:"Keep all cash, do nothing (safest)",
-        effect:"CA: +PLN 15M cash  |  CL: +PLN 15M deferred revenue  |  NWC: UNCHANGED",
-        cashΔ:15, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:15,
-        explains:[
+        letter: "A", main: "Keep all cash, do nothing (safest)",
+        effect: "CA: +PLN 15M cash  |  CL: +PLN 15M deferred revenue  |  NWC: UNCHANGED",
+        cashΔ: 15, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 15,
+        explains: [
           "PLN 15M cash arrives → Current Assets increase by PLN 15M",
           "BUT under IFRS 15: money received before delivery = contract liability",
           "Current Liabilities also increase by PLN 15M — deferred revenue",
@@ -685,10 +685,10 @@ const ROUNDS = [
         ]
       },
       {
-        letter:"B", main:"Spend PLN 8M on a marketing campaign",
-        effect:"CA: +PLN 7M net  |  CL: +PLN 15M deferred  |  NWC: −PLN 8M",
-        cashΔ:7, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:15,
-        explains:[
+        letter: "B", main: "Spend PLN 8M on a marketing campaign",
+        effect: "CA: +PLN 7M net  |  CL: +PLN 15M deferred  |  NWC: −PLN 8M",
+        cashΔ: 7, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 15,
+        explains: [
           "PLN 15M in, PLN 8M immediately spent on marketing campaign",
           "Net CA change: +7M (15 received, 8 spent). CL still +15M deferred",
           "NWC falls PLN 8M — you spent money that belongs to customers",
@@ -696,10 +696,10 @@ const ROUNDS = [
         ]
       },
       {
-        letter:"C", main:"Use PLN 5M to repay short-term loan early",
-        effect:"CA: +PLN 10M net  |  CL: +PLN 10M net  |  NWC: UNCHANGED (cleaner BS)",
-        cashΔ:10, recvΔ:0, payΔ:0, loanΔ:−5, accrΔ:15,
-        explains:[
+        letter: "C", main: "Use PLN 5M to repay short-term loan early",
+        effect: "CA: +PLN 10M net  |  CL: +PLN 10M net  |  NWC: UNCHANGED (cleaner BS)",
+        cashΔ: 10, recvΔ: 0, payΔ: 0, loanΔ: -5, accrΔ: 15,
+        explains: [
           "PLN 15M in, PLN 5M immediately used to clear the short-term loan",
           "Net CA: +10M. Net CL: +15M deferred − 5M loan = +10M",
           "NWC unchanged BUT the loan is gone — balance sheet is cleaner",
@@ -707,17 +707,17 @@ const ROUNDS = [
         ]
       }
     ],
-    lesson:"Pre-order cash is NOT free money. IFRS 15 records it as a contract liability until the product ships. This is exactly what happened to 11 bit studios in 2023 — PLN 13.3M of Frostpunk 2 pre-orders sat as current liabilities."
+    lesson: "Pre-order cash is NOT free money. IFRS 15 records it as a contract liability until the product ships. This is exactly what happened to 11 bit studios in 2023 — PLN 13.3M of Frostpunk 2 pre-orders sat as current liabilities."
   },
   {
     title: "Published Title Flops",
     scenario: "A game you published for an external studio sold 30,000 copies — not the 350,000 projected. You have PLN 12M of its development cost on your balance sheet as an intangible asset (non-current). The board must decide.",
     options: [
       {
-        letter:"A", main:"Write it off immediately — take the PLN 12M charge",
-        effect:"CA: unchanged  |  CL: unchanged  |  NWC: UNCHANGED  (profit −PLN 12M)",
-        cashΔ:0, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
-        explains:[
+        letter: "A", main: "Write it off immediately — take the PLN 12M charge",
+        effect: "CA: unchanged  |  CL: unchanged  |  NWC: UNCHANGED  (profit −PLN 12M)",
+        cashΔ: 0, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 0,
+        explains: [
           "Intangible assets are NON-CURRENT — they do not affect NWC at all",
           "Write-off is non-cash: not a single PLN leaves the bank",
           "Profit collapses PLN 12M on the income statement — NWC is unaffected",
@@ -725,10 +725,10 @@ const ROUNDS = [
         ]
       },
       {
-        letter:"B", main:"Wait one quarter, hope for DLC sales",
-        effect:"CA: unchanged  |  CL: unchanged  |  NWC: UNCHANGED  (risk delayed)",
-        cashΔ:0, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
-        explains:[
+        letter: "B", main: "Wait one quarter, hope for DLC sales",
+        effect: "CA: unchanged  |  CL: unchanged  |  NWC: UNCHANGED  (risk delayed)",
+        cashΔ: 0, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 0,
+        explains: [
           "Nothing changes on the balance sheet this quarter",
           "NWC unaffected — but the PLN 12M risk stays on the books",
           "If DLC sales don't materialise, you write it off anyway — just later",
@@ -736,10 +736,10 @@ const ROUNDS = [
         ]
       },
       {
-        letter:"C", main:"Sell the IP to another studio for PLN 3M cash",
-        effect:"CA: +PLN 3M cash  |  CL: unchanged  |  NWC: +PLN 3M",
-        cashΔ:3, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
-        explains:[
+        letter: "C", main: "Sell the IP to another studio for PLN 3M cash",
+        effect: "CA: +PLN 3M cash  |  CL: unchanged  |  NWC: +PLN 3M",
+        cashΔ: 3, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 0,
+        explains: [
           "Receive PLN 3M cash — Current Assets increase by PLN 3M",
           "NWC improves by PLN 3M — only option here that actually improves it",
           "Accept a PLN 9M accounting loss (paid 12M, sold for 3M)",
@@ -747,18 +747,18 @@ const ROUNDS = [
         ]
       }
     ],
-    lesson:"Write-offs hit the income statement (profit) but NOT NWC — because intangibles are non-current assets. NWC and profit can move in completely different directions. This is one of NWC's most important limitations."
+    lesson: "Write-offs hit the income statement (profit) but NOT NWC — because intangibles are non-current assets. NWC and profit can move in completely different directions. This is one of NWC's most important limitations."
   },
   {
     title: "The Launch — Final Board Decision",
     scenario: "Your game launches and it's a hit. PLN 50M in cash arrives. The pre-order deferred revenue clears automatically — removing PLN 15M from current liabilities. NWC jumps. The board must now decide what to do with the strong position.",
-    autoApply: { cashΔ:50, accrΔ:−15 },
+    autoApply: { cashΔ: 50, accrΔ: -15 },
     options: [
       {
-        letter:"A", main:"Acquire a smaller studio for PLN 30M cash",
-        effect:"CA: −PLN 30M  |  CL: unchanged  |  NWC: −PLN 30M",
-        cashΔ:−30, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
-        explains:[
+        letter: "A", main: "Acquire a smaller studio for PLN 30M cash",
+        effect: "CA: −PLN 30M  |  CL: unchanged  |  NWC: −PLN 30M",
+        cashΔ: -30, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 0,
+        explains: [
           "PLN 30M cash paid out — becomes a non-current investment asset",
           "Current Assets fall significantly, NWC drops by PLN 30M",
           "Aggressive use of the cash buffer — bets on future growth synergies",
@@ -766,10 +766,10 @@ const ROUNDS = [
         ]
       },
       {
-        letter:"B", main:"Pay PLN 20M dividend to shareholders",
-        effect:"CA: −PLN 20M  |  CL: unchanged  |  NWC: −PLN 20M",
-        cashΔ:−20, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
-        explains:[
+        letter: "B", main: "Pay PLN 20M dividend to shareholders",
+        effect: "CA: −PLN 20M  |  CL: unchanged  |  NWC: −PLN 20M",
+        cashΔ: -20, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 0,
+        explains: [
           "PLN 20M cash leaves the company — returns value to shareholders",
           "NWC drops PLN 20M — reduces the conservative buffer",
           "Not a wrong decision — but reduces financial flexibility going forward",
@@ -777,10 +777,10 @@ const ROUNDS = [
         ]
       },
       {
-        letter:"C", main:"Keep all cash, start next game development",
-        effect:"CA: no additional change  |  CL: unchanged  |  NWC: stays high",
-        cashΔ:0, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
-        explains:[
+        letter: "C", main: "Keep all cash, start next game development",
+        effect: "CA: no additional change  |  CL: unchanged  |  NWC: stays high",
+        cashΔ: 0, recvΔ: 0, payΔ: 0, loanΔ: 0, accrΔ: 0,
+        explains: [
           "Retain all cash — no additional NWC change beyond the launch inflow",
           "Start self-funding the next development cycle immediately",
           "Maximally conservative: NWC remains at its peak",
@@ -788,42 +788,43 @@ const ROUNDS = [
         ]
       }
     ],
-    lesson:"Conservative NWC has an opportunity cost — cash sitting idle vs deployed for growth. Both 11BS and CDR chose to retain cash. Same policy, different scale, same underlying logic."
+    lesson: "Conservative NWC has an opportunity cost — cash sitting idle vs deployed for growth. Both 11BS and CDR chose to retain cash. Same policy, different scale, same underlying logic."
   }
 ];
 
 // ═══════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════
-let _db          = null;
-let _liveState   = null;
-let pollTimer    = null;
+let _db = null;
+let _liveState = null;
+let pollTimer = null;
 
-let myName       = '';
-let isHost       = false;
-let playerId     = '';
-let myVote       = -1;
-let lastRound    = -1;
+let myName = '';
+let isHost = false;
+let playerId = '';
+let myVote = -1;
+let lastRound = -1;
 let lastRestartToken = null;
 
-let bs = { cash:60, recv:25, pay:8, loan:5, accr:7 };
-let nwcHistory   = [65];
-let nwcChart     = null;
+let bs = { cash: 60, recv: 25, pay: 8, loan: 5, accr: 7 };
+let nwcHistory = [65];
+let nwcChart = null;
 
-function calcCA()  { return bs.cash + bs.recv; }
-function calcCL()  { return bs.pay + bs.loan + Math.max(0, bs.accr); }
+function calcCA() { return bs.cash + bs.recv; }
+function calcCL() { return bs.pay + bs.loan + Math.max(0, bs.accr); }
 function calcNWC() { return calcCA() - calcCL(); }
 
 function polClass(nwc) {
   if (nwc >= 50) return "conservative";
   if (nwc >= 25) return "watch";
-  if (nwc >= 0)  return "caution";
+  if (nwc >= 0) return "caution";
   return "danger";
 }
+
 function polLabel(nwc) {
   if (nwc >= 50) return "Conservative";
   if (nwc >= 25) return "Watch";
-  if (nwc >= 0)  return "Caution";
+  if (nwc >= 0) return "Caution";
   return "Aggressive";
 }
 
@@ -831,11 +832,22 @@ function polLabel(nwc) {
 // FIREBASE
 // ═══════════════════════════════════════════════════════
 function initFirebase() {
+  console.log('🔌 Initializing Firebase...');
   try {
+    if (typeof firebase === 'undefined') {
+      throw new Error('Firebase SDK not loaded');
+    }
     firebase.initializeApp(FIREBASE_CONFIG);
     _db = firebase.database();
-    _db.ref(ROOT + '/state').on('value', snap => { _liveState = snap.val(); });
-  } catch(e) { console.error('Firebase:', e); }
+    console.log('✅ Firebase initialized');
+    
+    _db.ref(ROOT + '/state').on('value', snap => {
+      _liveState = snap.val();
+    });
+  } catch (e) {
+    console.error('❌ Firebase init failed:', e);
+    showToast('Connection error: ' + e.message, 'error');
+  }
 }
 
 async function loadState() {
@@ -843,20 +855,25 @@ async function loadState() {
   const snap = await _db.ref(ROOT + '/state').once('value');
   return snap.val();
 }
+
 async function saveState(st) {
   if (!_db) return;
   await _db.ref(ROOT + '/state').set(st);
 }
+
 function freshState() {
-  return { phase:'lobby', round:0, votes:{}, revealed:false,
-           players:{}, bs:{...bs}, choices:[], currentNWC:65,
-           nwcHistory:[65], restartToken:null };
+  return {
+    phase: 'lobby', round: 0, votes: {}, revealed: false,
+    players: {}, bs: { ...bs }, choices: [], currentNWC: 65,
+    nwcHistory: [65], restartToken: null
+  };
 }
 
 // ═══════════════════════════════════════════════════════
 // AUTO-REJOIN ON REFRESH
 // ═══════════════════════════════════════════════════════
 window.addEventListener('load', async () => {
+  console.log('🚀 App loading...');
   initFirebase();
   await new Promise(r => setTimeout(r, 700));
 
@@ -876,13 +893,12 @@ window.addEventListener('load', async () => {
 
   // Student rejoin
   const savedName = localStorage.getItem('nwc_name');
-  const savedId   = localStorage.getItem('nwc_id');
+  const savedId = localStorage.getItem('nwc_id');
   if (savedName && savedId) {
     myName = savedName; playerId = savedId;
     let state = await loadState();
     if (!state) return;
 
-    // Re-register if missing
     if (!state.players) state.players = {};
     if (!state.players[playerId]) {
       state.players[playerId] = { name: myName, joined: Date.now() };
@@ -908,17 +924,19 @@ window.addEventListener('load', async () => {
 // JOIN / HOST LOGIN
 // ═══════════════════════════════════════════════════════
 function toggleHostSection() {
+  console.log('🔘 Toggle host section');
   document.getElementById('host-section').classList.toggle('hidden');
 }
 
 async function joinGame() {
+  console.log('🎮 Join game clicked');
   const name = document.getElementById('player-name-input').value.trim();
   if (!name) { showToast('Please enter your name', 'error'); return; }
 
-  myName  = name;
-  playerId = 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  myName = name;
+  playerId = 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
   localStorage.setItem('nwc_name', myName);
-  localStorage.setItem('nwc_id',   playerId);
+  localStorage.setItem('nwc_id', playerId);
   localStorage.removeItem('nwc_host');
 
   let state = await loadState();
@@ -984,21 +1002,20 @@ function restoreHostView(state) {
 }
 
 function hideAllSections() {
-  ['host-lobby','host-demo','host-round','host-summary'].forEach(id =>
+  ['host-lobby', 'host-demo', 'host-round', 'host-summary'].forEach(id =>
     document.getElementById(id).classList.add('hidden'));
 }
 
 function updateHeaderBtns(state) {
   const phase = state ? state.phase : 'lobby';
-  const ri    = state ? state.round : 0;
-  const rev   = state ? state.revealed : false;
+  const ri = state ? state.round : 0;
+  const rev = state ? state.revealed : false;
 
-  setBtn('btn-start',   phase === 'lobby');
-  setBtn('btn-reveal',  phase === 'round' && !rev);
-  setBtn('btn-next',    phase === 'round' && rev && ri < ROUNDS.length - 1);
+  setBtn('btn-start', phase === 'lobby');
+  setBtn('btn-reveal', phase === 'round' && !rev);
+  setBtn('btn-next', phase === 'round' && rev && ri < ROUNDS.length - 1);
   setBtn('btn-summary', phase === 'round' && rev && ri === ROUNDS.length - 1);
 
-  // In-ctrl-bar buttons
   const hRev = document.getElementById('h-reveal-btn');
   const hNxt = document.getElementById('h-next-btn');
   const hSum = document.getElementById('h-summary-btn');
@@ -1026,10 +1043,10 @@ async function hostStart() {
 
 async function hostStartRound(idx) {
   let state = await loadState();
-  state.phase   = 'round';
-  state.round   = idx;
-  state.votes   = {};
-  state.revealed= false;
+  state.phase = 'round';
+  state.round = idx;
+  state.votes = {};
+  state.revealed = false;
   if (state.bs) bs = state.bs;
   await saveState(state);
   hideAllSections();
@@ -1041,21 +1058,19 @@ async function hostStartRound(idx) {
 
 async function hostReveal() {
   let state = await loadState();
-  const votes  = state.votes || {};
+  const votes = state.votes || {};
   const winner = getWinner(votes);
-  const round  = ROUNDS[state.round];
-  const opt    = round.options[winner];
+  const round = ROUNDS[state.round];
+  const opt = round.options[winner];
 
-  // Apply round 4 auto-update first
   if (round.autoApply) {
     bs.cash = (bs.cash || 0) + round.autoApply.cashΔ;
     bs.accr = (bs.accr || 0) + round.autoApply.accrΔ;
   }
 
-  // Apply winner
   bs.cash = Math.max(0, (bs.cash || 0) + opt.cashΔ);
   bs.recv = Math.max(0, (bs.recv || 0) + opt.recvΔ);
-  bs.pay  = Math.max(0, (bs.pay  || 0) + opt.payΔ);
+  bs.pay = Math.max(0, (bs.pay || 0) + opt.payΔ);
   bs.loan = Math.max(0, (bs.loan || 0) + opt.loanΔ);
   bs.accr = (bs.accr || 0) + opt.accrΔ;
 
@@ -1065,9 +1080,9 @@ async function hostReveal() {
   const choices = state.choices || [];
   choices.push(winner);
 
-  state.bs         = { ...bs };
-  state.revealed   = true;
-  state.choices    = choices;
+  state.bs = { ...bs };
+  state.revealed = true;
+  state.choices = choices;
   state.currentNWC = nwc;
   state.nwcHistory = [...nwcHistory];
   await saveState(state);
@@ -1079,10 +1094,10 @@ async function hostNextRound() {
   let state = await loadState();
   const next = state.round + 1;
   if (next >= ROUNDS.length) return;
-  state.round   = next;
-  state.phase   = 'round';
-  state.votes   = {};
-  state.revealed= false;
+  state.round = next;
+  state.phase = 'round';
+  state.votes = {};
+  state.revealed = false;
   await saveState(state);
   document.getElementById('nwc-change-tag').classList.add('hidden');
   hideAllSections();
@@ -1105,7 +1120,7 @@ async function hostShowSummary() {
 
 async function hostRestart() {
   if (!confirm('Restart the session? All data cleared, everyone back to join screen.')) return;
-  bs = { cash:60, recv:25, pay:8, loan:5, accr:7 };
+  bs = { cash: 60, recv: 25, pay: 8, loan: 5, accr: 7 };
   nwcHistory = [65];
   if (nwcChart) { nwcChart.destroy(); nwcChart = null; }
   const fresh = freshState();
@@ -1138,32 +1153,28 @@ function renderLobby(state) {
 }
 
 function renderRoundHost(state) {
-  const ri    = state.round;
+  const ri = state.round;
   const round = ROUNDS[ri];
   const votes = state.votes || {};
 
-  // Badges + text
   document.getElementById('h-round-badge').textContent = `Round ${ri + 1} of 4`;
-  document.getElementById('h-round-title').textContent  = round.title;
+  document.getElementById('h-round-title').textContent = round.title;
   document.getElementById('h-scenario-text').textContent = round.scenario;
 
-  // Progress dots
   for (let i = 0; i < 4; i++) {
     const d = document.getElementById('pd' + i);
     if (d) d.className = 'dot' + (i < ri ? ' done' : i === ri ? ' active' : '');
   }
 
-  // Vote counts
-  const totals = [0,0,0];
+  const totals = [0, 0, 0];
   Object.values(votes).forEach(v => { if (v >= 0 && v <= 2) totals[v]++; });
-  const total = totals.reduce((a,b) => a+b, 0);
+  const total = totals.reduce((a, b) => a + b, 0);
   const playerCount = Object.keys(state.players || {}).length;
-  document.getElementById('votes-in').textContent    = total;
+  document.getElementById('votes-in').textContent = total;
   document.getElementById('votes-total').textContent = playerCount;
 
-  // Vote bars — always show full text
   document.getElementById('h-vote-bars').innerHTML = round.options.map((opt, i) => {
-    const pct = total ? Math.round(totals[i]/total*100) : 0;
+    const pct = total ? Math.round(totals[i] / total * 100) : 0;
     return `
       <div class="vb-row">
         <div class="vb-letter">${opt.letter}</div>
@@ -1179,7 +1190,6 @@ function renderRoundHost(state) {
       </div>`;
   }).join('');
 
-  // Ctrl bar buttons
   const hRev = document.getElementById('h-reveal-btn');
   const hNxt = document.getElementById('h-next-btn');
   const hSum = document.getElementById('h-summary-btn');
@@ -1187,7 +1197,6 @@ function renderRoundHost(state) {
   if (hNxt) hNxt.classList.toggle('hidden', !(state.revealed && ri < ROUNDS.length - 1));
   if (hSum) hSum.classList.toggle('hidden', !(state.revealed && ri === ROUNDS.length - 1));
 
-  // Winner + explanation
   if (state.revealed) {
     const winner = getWinner(votes);
     const opt = round.options[winner];
@@ -1195,7 +1204,7 @@ function renderRoundHost(state) {
       <div class="winner-banner">
         <div class="winner-letter">${opt.letter}</div>
         <div>
-          <div class="winner-label">Board Decision — ${totals[winner]} votes (${total ? Math.round(totals[winner]/total*100) : 0}%)</div>
+          <div class="winner-label">Board Decision — ${totals[winner]} votes (${total ? Math.round(totals[winner] / total * 100) : 0}%)</div>
           <div class="winner-main">${opt.main}</div>
           <div class="winner-effect">${opt.effect}</div>
         </div>
@@ -1219,9 +1228,9 @@ function updateNWCPanel(nwc, bsData, hist) {
     document.getElementById('bs-cash').textContent = `PLN ${bsData.cash}M`;
     document.getElementById('bs-recv').textContent = `PLN ${bsData.recv}M`;
     document.getElementById('bs-other').textContent = `PLN 0M`;
-    document.getElementById('bs-pay').textContent   = `PLN ${bsData.pay}M`;
-    document.getElementById('bs-loan').textContent  = `PLN ${bsData.loan}M`;
-    document.getElementById('bs-accr').textContent  = `PLN ${Math.max(0,bsData.accr)}M`;
+    document.getElementById('bs-pay').textContent = `PLN ${bsData.pay}M`;
+    document.getElementById('bs-loan').textContent = `PLN ${bsData.loan}M`;
+    document.getElementById('bs-accr').textContent = `PLN ${Math.max(0, bsData.accr)}M`;
     const ca = bsData.cash + bsData.recv;
     const cl = bsData.pay + bsData.loan + Math.max(0, bsData.accr);
     document.getElementById('bs-ca').textContent = `PLN ${ca}M`;
@@ -1238,18 +1247,16 @@ function updateNWCPanel(nwc, bsData, hist) {
   pillEl.textContent = polLabel(nwc);
   pillEl.className = `policy-pill ${pol}`;
 
-  // Change tag
   const h = hist || nwcHistory;
   const prev = h.length >= 2 ? h[h.length - 2] : 65;
   const diff = nwc - prev;
-  const tag  = document.getElementById('nwc-change-tag');
+  const tag = document.getElementById('nwc-change-tag');
   tag.classList.remove('hidden');
   if (diff < 0) { tag.className = 'nwc-change neg'; tag.textContent = `▼ ${diff}M from previous`; }
   else if (diff > 0) { tag.className = 'nwc-change pos'; tag.textContent = `▲ +${diff}M from previous`; }
   else { tag.className = 'nwc-change neu'; tag.textContent = '↔ NWC unchanged'; }
 
-  // Flash BS values
-  ['bs-ca','bs-cl'].forEach(id => {
+  ['bs-ca', 'bs-cl'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
   });
@@ -1288,8 +1295,8 @@ function updateChart(hist) {
         animation: { duration: 800, easing: 'easeInOutQuart' },
         plugins: { legend: { display: false } },
         scales: {
-          x: { ticks:{ color:'#64748b', font:{size:10} }, grid:{ color:'rgba(255,255,255,0.04)' } },
-          y: { ticks:{ color:'#64748b', font:{size:10}, callback: v => v + 'M' }, grid:{ color:'rgba(255,255,255,0.04)' } }
+          x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+          y: { ticks: { color: '#64748b', font: { size: 10 }, callback: v => v + 'M' }, grid: { color: 'rgba(255,255,255,0.04)' } }
         }
       }
     });
@@ -1298,37 +1305,34 @@ function updateChart(hist) {
 
 function buildSummary(state) {
   const choices = state.choices || [];
-  const hist    = state.nwcHistory || nwcHistory;
-  const maxH    = Math.max(...hist, 1);
-  const polColors = { conservative:'#34d399', watch:'#f59e0b', caution:'#f97316', danger:'#ef4444' };
+  const hist = state.nwcHistory || nwcHistory;
+  const maxH = Math.max(...hist, 1);
+  const polColors = { conservative: '#34d399', watch: '#f59e0b', caution: '#f97316', danger: '#ef4444' };
 
-  // Journey bars
-  const barLabels = ['Start','Round 1','Round 2','Round 3','Round 4'];
+  const barLabels = ['Start', 'Round 1', 'Round 2', 'Round 3', 'Round 4'];
   document.getElementById('journey-bars').innerHTML = hist.map((v, i) => {
     const h = Math.max(6, (v / maxH) * 120);
     const c = polColors[polClass(v)];
     return `<div class="jb-col">
       <div class="jb-val">PLN ${v}M</div>
       <div class="jb-bar" style="height:${h}px;background:${c}"></div>
-      <div class="jb-lbl">${barLabels[i] || 'R'+i}</div>
+      <div class="jb-lbl">${barLabels[i] || 'R' + i}</div>
     </div>`;
   }).join('');
 
-  // Lesson cards
   document.getElementById('lesson-cards').innerHTML = ROUNDS.map((r, i) => {
-    const opt   = choices[i] !== undefined ? r.options[choices[i]] : null;
-    const after = hist[i+1] !== undefined ? hist[i+1] : '—';
-    const diff  = hist[i+1] !== undefined ? hist[i+1] - hist[i] : 0;
-    const sign  = diff > 0 ? '+' : '';
+    const opt = choices[i] !== undefined ? r.options[choices[i]] : null;
+    const after = hist[i + 1] !== undefined ? hist[i + 1] : '—';
+    const diff = hist[i + 1] !== undefined ? hist[i + 1] - hist[i] : 0;
+    const sign = diff > 0 ? '+' : '';
     return `<div class="lesson-card">
-      <div class="lesson-round">Round ${i+1}</div>
+      <div class="lesson-round">Round ${i + 1}</div>
       <div class="lesson-heading">${r.title}</div>
       <div class="lesson-nwc">PLN ${after}M (${sign}${diff}M)</div>
       <div class="lesson-text">${opt ? `Board chose <strong>${opt.letter}</strong><br>` : ''}${r.lesson}</div>
     </div>`;
   }).join('');
 
-  // Comparison
   const finalNWC = hist[hist.length - 1];
   document.getElementById('compare-cards').innerHTML = `
     <div class="compare-card">
@@ -1359,14 +1363,14 @@ function renderWaiting(state) {
 }
 
 function renderVoteScreen(state) {
-  const ri    = state.round;
+  const ri = state.round;
   const round = ROUNDS[ri];
-  const nwc   = state.currentNWC || 65;
+  const nwc = state.currentNWC || 65;
 
-  document.getElementById('s-round-val').textContent  = `${ri + 1} / 4`;
+  document.getElementById('s-round-val').textContent = `${ri + 1} / 4`;
   document.getElementById('s-nwc-header').textContent = `PLN ${nwc}M`;
-  document.getElementById('s-title').textContent      = round.title;
-  document.getElementById('s-body').textContent       = round.scenario;
+  document.getElementById('s-title').textContent = round.title;
+  document.getElementById('s-body').textContent = round.scenario;
 
   const voted = myVote >= 0;
   document.getElementById('s-voted').classList.toggle('hidden', !voted);
@@ -1401,20 +1405,20 @@ function showStudentResult(state) {
   const nwc = state.currentNWC || 65;
   const pol = polClass(nwc);
   document.getElementById('r-nwc-val').textContent = `PLN ${nwc}M`;
-  document.getElementById('r-nwc-val').className   = `result-nwc-val ${pol}`;
-  document.getElementById('r-policy').textContent  = polLabel(nwc);
-  document.getElementById('r-policy').className    = `result-policy ${pol}`;
+  document.getElementById('r-nwc-val').className = `result-nwc-val ${pol}`;
+  document.getElementById('r-policy').textContent = polLabel(nwc);
+  document.getElementById('r-policy').className = `result-policy ${pol}`;
   if (state.phase === 'summary') {
     document.getElementById('r-title').textContent = 'Board Session Complete!';
-    document.getElementById('r-sub').textContent   = 'Check the main screen for the full NWC summary.';
+    document.getElementById('r-sub').textContent = 'Check the main screen for the full NWC summary.';
   } else {
-    document.getElementById('r-title').textContent = `Round ${(state.round||0)+1} complete!`;
-    document.getElementById('r-sub').textContent   = 'The board has decided. Check the main screen →';
+    document.getElementById('r-title').textContent = `Round ${(state.round || 0) + 1} complete!`;
+    document.getElementById('r-sub').textContent = 'The board has decided. Check the main screen →';
   }
 }
 
 // ═══════════════════════════════════════════════════════
-// POLLING — follows Fed game pattern exactly
+// POLLING
 // ═══════════════════════════════════════════════════════
 function startPolling() {
   stopPolling();
@@ -1422,7 +1426,6 @@ function startPolling() {
     const state = _liveState;
     if (!state) return;
 
-    // Detect restart
     if (state.restartToken && state.restartToken !== lastRestartToken) {
       if (lastRestartToken !== null) {
         lastRestartToken = state.restartToken;
@@ -1447,7 +1450,6 @@ function startPolling() {
       return;
     }
 
-    // Student flow
     if (state.phase === 'lobby' || state.phase === 'demo') {
       if (!document.getElementById('waiting-screen').classList.contains('active'))
         showScreen('waiting-screen');
@@ -1481,7 +1483,7 @@ function stopPolling() {
 // UTILS
 // ═══════════════════════════════════════════════════════
 function getWinner(votes) {
-  const totals = [0,0,0];
+  const totals = [0, 0, 0];
   Object.values(votes).forEach(v => { if (v >= 0 && v <= 2) totals[v]++; });
   return totals.indexOf(Math.max(...totals));
 }
@@ -1498,8 +1500,10 @@ function showToast(msg, type = '') {
   setTimeout(() => { t.className = 'toast'; }, 2800);
 }
 
-document.getElementById('player-name-input').addEventListener('keydown', e => { if (e.key==='Enter') joinGame(); });
-document.getElementById('host-pin-input').addEventListener('keydown',   e => { if (e.key==='Enter') joinAsHost(); });
+document.getElementById('player-name-input').addEventListener('keydown', e => { if (e.key === 'Enter') joinGame(); });
+document.getElementById('host-pin-input').addEventListener('keydown', e => { if (e.key === 'Enter') joinAsHost(); });
+
+console.log('✅ Script loaded successfully');
 </script>
 </body>
 </html>
