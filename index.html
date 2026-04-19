@@ -2,1948 +2,1504 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Frostgate Studios — Board of Directors</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
 :root {
-  --dark:    #0f0f17;
-  --darker:  #080810;
-  --card:    #1a1a2e;
-  --border:  #2a2a45;
-  --terra:   #e85d3a;
-  --terra2:  #ff7a5a;
-  --teal:    #2dd4bf;
-  --gold:    #f59e0b;
-  --sage:    #34d399;
-  --muted:   #64748b;
-  --text:    #e2e8f0;
-  --dim:     #94a3b8;
-  --white:   #ffffff;
-  --danger:  #ef4444;
-  --amber:   #f97316;
+  --bg:     #0a0a14;
+  --bg2:    #111120;
+  --bg3:    #181828;
+  --border: rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.14);
+  --text:   #e2e8f0;
+  --muted:  #64748b;
+  --terra:  #e85d3a;
+  --terra2: #ff7a5a;
+  --teal:   #2dd4bf;
+  --sage:   #34d399;
+  --gold:   #f59e0b;
+  --amber:  #f97316;
+  --purple: #a78bfa;
+  --up:     #34d399;
+  --down:   #ef4444;
+  --mono:   'Space Mono', monospace;
+  --sans:   'DM Sans', sans-serif;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--darker);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
+/* ── SCREENS ── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ── JOIN SCREEN ── */
+#join-screen {
+  align-items: center; justify-content: center; padding: 32px 20px;
+  background: radial-gradient(ellipse at 50% 0%, #1a0f0a 0%, var(--bg) 70%);
 }
-
-/* ── SHARED ─────────────────────────────────── */
-.hidden { display: none !important; }
-
-.screen {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.mono { font-family: 'DM Mono', monospace; }
-
-/* ── LANDING / LOBBY (student) ────────────── */
-#landing {
-  background: var(--darker);
-  position: relative;
-  overflow: hidden;
-}
-
-#landing::before {
-  content: '';
-  position: absolute;
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(232,93,58,0.12) 0%, transparent 70%);
-  top: -200px; left: -200px;
-  pointer-events: none;
-}
-
-#landing::after {
-  content: '';
-  position: absolute;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(45,212,191,0.08) 0%, transparent 70%);
-  bottom: -100px; right: -100px;
-  pointer-events: none;
-}
-
-.landing-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 48px 40px;
-  width: 100%;
-  max-width: 420px;
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.5);
-}
-
-.landing-logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 13px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--terra);
-  margin-bottom: 8px;
-}
-
-.landing-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--white);
-  line-height: 1.1;
-  margin-bottom: 8px;
-}
-
-.landing-sub {
-  color: var(--dim);
-  font-size: 14px;
-  margin-bottom: 32px;
-  line-height: 1.5;
-}
-
-.input-group {
-  margin-bottom: 16px;
-}
-
-.input-group label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--dim);
-  margin-bottom: 8px;
-}
-
-.input-group input {
-  width: 100%;
-  background: var(--darker);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-  color: var(--white);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.input-group input:focus {
-  border-color: var(--terra);
-}
-
-.btn-primary {
-  width: 100%;
-  background: var(--terra);
-  color: var(--white);
-  border: none;
-  border-radius: 10px;
-  padding: 16px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 8px;
-}
-
-.btn-primary:hover { background: var(--terra2); transform: translateY(-1px); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-.player-count {
-  margin-top: 20px;
-  padding: 12px 16px;
-  background: rgba(45,212,191,0.08);
-  border: 1px solid rgba(45,212,191,0.2);
-  border-radius: 10px;
-  color: var(--teal);
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-}
-
-/* ── WAITING ROOM ─────────────────────────── */
-#waiting {
-  text-align: center;
-}
-
-.waiting-pulse {
-  width: 80px; height: 80px;
+.join-inner { width: 100%; max-width: 400px; text-align: center; }
+.join-logo {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, #3d1a0f, var(--terra));
   border-radius: 50%;
-  background: rgba(232,93,58,0.15);
-  border: 2px solid var(--terra);
   display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 24px;
+  margin: 0 auto 20px; font-size: 32px;
+  box-shadow: 0 0 40px rgba(232,93,58,0.3);
+}
+.join-title { font-family: var(--mono); font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.join-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+.start-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(232,93,58,0.1); border: 1px solid rgba(232,93,58,0.25);
+  border-radius: 40px; padding: 8px 20px; margin-bottom: 32px;
+  font-size: 14px; color: var(--terra); font-weight: 500;
+}
+.input-group { margin-bottom: 16px; text-align: left; }
+.input-group label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 6px; }
+input[type="text"], input[type="password"] {
+  width: 100%; background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 14px 16px; font-size: 16px;
+  font-family: var(--sans); color: var(--text); outline: none; transition: border-color 0.2s;
+}
+input:focus { border-color: var(--terra); }
+.btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: 600; font-family: var(--sans); cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: linear-gradient(135deg, #8b2500, var(--terra)); color: #fff; box-shadow: 0 4px 20px rgba(232,93,58,0.3); }
+.btn-primary:hover { transform: translateY(-1px); }
+.btn-secondary { background: var(--bg2); border: 1px solid var(--border2); color: var(--text); margin-top: 10px; }
+.host-toggle { margin-top: 24px; font-size: 13px; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; background: none; border: none; font-family: var(--sans); }
+.host-section { margin-top: 16px; }
+
+/* ── WAITING SCREEN ── */
+#waiting-screen {
+  align-items: center; justify-content: center; padding: 32px 20px; text-align: center;
+  background: radial-gradient(ellipse at 50% 0%, #1a0f0a 0%, var(--bg) 70%);
+}
+.waiting-inner { max-width: 360px; }
+.pulse-ring {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(232,93,58,0.15); border: 2px solid rgba(232,93,58,0.4);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; font-size: 36px;
   animation: pulse 2s ease-in-out infinite;
 }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(232,93,58,0.3); } 50% { box-shadow: 0 0 0 16px rgba(232,93,58,0); } }
+.waiting-title { font-family: var(--mono); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.waiting-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+.player-count { font-family: var(--mono); font-size: 64px; font-weight: 700; color: var(--terra); line-height: 1; }
+.player-count-label { font-size: 13px; color: var(--muted); margin-top: 4px; margin-bottom: 24px; }
+.players-list { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; max-height: 200px; overflow-y: auto; text-align: left; margin-bottom: 20px; }
+.player-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--bg3); border-radius: 20px; padding: 4px 12px; font-size: 13px; margin: 3px; }
+.player-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--terra); }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.7; }
+/* ── STUDENT VOTE SCREEN ── */
+#vote-screen { padding: 0; }
+.vote-header {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 10;
 }
+.round-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-family: var(--mono); }
+.round-val { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--terra); }
+.nwc-header-val { text-align: right; }
+.nwc-header-label { font-size: 11px; color: var(--muted); }
+.nwc-header-num { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--sage); }
 
-.waiting-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 8px;
+.scenario-block {
+  margin: 12px 16px;
+  background: linear-gradient(135deg, rgba(232,93,58,0.08), rgba(232,93,58,0.02));
+  border: 1px solid rgba(232,93,58,0.25); border-left: 3px solid var(--terra);
+  border-radius: 10px; padding: 12px 14px;
 }
+.scenario-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--terra); font-family: var(--mono); margin-bottom: 4px; }
+.scenario-title-s { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.scenario-body-s { font-size: 13px; color: var(--muted); line-height: 1.5; }
 
-.waiting-sub {
-  color: var(--dim);
-  font-size: 15px;
-  margin-bottom: 24px;
+.section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-family: var(--mono); padding: 0 16px; margin: 12px 0 8px; }
+
+.options-list-s { display: flex; flex-direction: column; gap: 8px; padding: 0 16px 16px; }
+.option-btn-s {
+  background: var(--bg2); border: 1.5px solid var(--border2); border-radius: 12px;
+  padding: 14px; cursor: pointer; transition: all 0.2s; text-align: left;
+  color: var(--text); display: flex; align-items: flex-start; gap: 12px;
 }
-
-.player-badge {
-  display: inline-block;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 8px 20px;
-  font-size: 14px;
-  color: var(--teal);
-  font-weight: 500;
-}
-
-/* ── STUDENT VOTE SCREEN ──────────────────── */
-#vote-screen {
-  padding: 20px;
-  max-width: 480px;
-  width: 100%;
-}
-
-.round-badge {
-  display: inline-block;
-  background: rgba(232,93,58,0.15);
-  border: 1px solid var(--terra);
-  color: var(--terra);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  border-radius: 20px;
-  padding: 6px 14px;
-  margin-bottom: 16px;
-}
-
-.scenario-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 20px;
-}
-
-.scenario-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 12px;
-  line-height: 1.3;
-}
-
-.scenario-body {
-  color: var(--dim);
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.nwc-mini {
-  background: var(--darker);
-  border-radius: 10px;
-  padding: 12px 16px;
-  margin-top: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nwc-mini-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-.nwc-mini-value { font-family: 'DM Mono', monospace; font-size: 18px; color: var(--sage); font-weight: 500; }
-
-.options-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.option-btn {
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  padding: 18px 20px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: left;
-  color: var(--text);
-}
-
-.option-btn:hover {
-  border-color: var(--terra);
-  background: rgba(232,93,58,0.08);
-  transform: translateX(4px);
-}
-
-.option-btn.selected {
-  border-color: var(--terra);
-  background: rgba(232,93,58,0.12);
-}
-
-.option-btn.disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-.option-letter {
-  display: inline-block;
-  width: 28px; height: 28px;
-  background: var(--terra);
-  border-radius: 6px;
-  text-align: center;
-  line-height: 28px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--white);
-  margin-right: 12px;
-  flex-shrink: 0;
-}
-
-.option-content { display: flex; align-items: flex-start; }
-.option-text { flex: 1; }
-.option-main { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
-.option-effect {
-  font-size: 12px;
-  color: var(--dim);
-  font-family: 'DM Mono', monospace;
-}
-
-.voted-msg {
-  text-align: center;
-  padding: 24px;
-  background: var(--card);
-  border: 1px solid rgba(52,211,153,0.3);
-  border-radius: 16px;
-  color: var(--sage);
-}
-
-.voted-msg .voted-icon { font-size: 40px; margin-bottom: 12px; }
-.voted-msg p { font-size: 15px; font-weight: 500; }
-.voted-msg small { color: var(--dim); font-size: 13px; }
-
-/* ── HOST VIEW ───────────────────────────── */
-#host-view {
-  min-height: 100vh;
-  background: var(--darker);
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-}
-
-.host-topbar {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-}
-
-.host-brand {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--white);
-}
-
-.host-brand span { color: var(--terra); }
-
-.host-meta {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.meta-chip {
-  background: var(--darker);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 13px;
-  color: var(--dim);
-  font-family: 'DM Mono', monospace;
-}
-
-.meta-chip.active { color: var(--teal); border-color: rgba(45,212,191,0.3); }
-
-.host-body {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  grid-template-rows: 1fr 180px;
-  gap: 0;
-  overflow: hidden;
-}
-
-/* Left main area */
-.host-main {
-  grid-row: 1 / 2;
-  grid-column: 1 / 2;
-  padding: 24px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  overflow: hidden;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-/* Right: NWC dashboard */
-.host-nwc {
-  grid-row: 1 / 2;
-  grid-column: 2 / 3;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  border-bottom: 1px solid var(--border);
-  background: var(--card);
-}
-
-/* Bottom: controls */
-.host-controls {
-  grid-row: 2 / 3;
-  grid-column: 1 / 3;
-  padding: 16px 28px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--card);
-  border-top: 1px solid var(--border);
-}
-
-/* Lobby screen inside host */
-#host-lobby {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 40px;
-}
-
-.lobby-code {
-  font-family: 'Playfair Display', serif;
-  font-size: 80px;
-  font-weight: 900;
-  color: var(--terra);
-  letter-spacing: -2px;
-  line-height: 1;
-  margin: 16px 0;
-}
-
-.lobby-url {
-  font-family: 'DM Mono', monospace;
-  font-size: 16px;
-  color: var(--teal);
-  background: var(--card);
-  padding: 12px 24px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  margin-bottom: 24px;
-}
-
-.players-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  max-width: 700px;
-  margin-top: 20px;
-}
-
-.player-chip {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 13px;
-  color: var(--text);
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-
-/* Round header */
-.round-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.round-number {
-  font-family: 'Playfair Display', serif;
-  font-size: 13px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--terra);
-  flex-shrink: 0;
-  padding-top: 4px;
-}
-
-.round-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--white);
-  line-height: 1.2;
-}
-
-.scenario-text {
-  background: var(--card);
-  border-left: 3px solid var(--terra);
-  padding: 16px 20px;
-  border-radius: 0 10px 10px 0;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--dim);
-  flex-shrink: 0;
-}
-
-/* Vote bars */
-.vote-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1;
-}
-
-.vote-bar-row {
-  display: grid;
-  grid-template-columns: 28px 1fr 60px;
-  align-items: center;
-  gap: 10px;
-}
-
-.vote-bar-letter {
-  width: 28px; height: 28px;
-  background: var(--terra);
-  border-radius: 6px;
+.option-btn-s:active { transform: scale(0.98); }
+.option-btn-s.selected { border-color: var(--terra); background: rgba(232,93,58,0.1); }
+.option-btn-s.disabled { opacity: 0.5; cursor: not-allowed; }
+.opt-letter {
+  width: 30px; height: 30px; background: var(--terra); border-radius: 6px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700;
-  color: var(--white);
-  flex-shrink: 0;
+  font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; margin-top: 2px;
 }
+.opt-text { flex: 1; }
+.opt-main { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+.opt-effect { font-size: 12px; color: var(--teal); font-family: var(--mono); line-height: 1.4; }
 
-.vote-bar-track {
-  background: var(--darker);
-  border-radius: 6px;
-  height: 36px;
+.voted-block {
+  margin: 20px 16px; background: rgba(52,211,153,0.08);
+  border: 1px solid rgba(52,211,153,0.3); border-radius: 14px;
+  padding: 24px; text-align: center;
+}
+.voted-icon { font-size: 40px; margin-bottom: 12px; }
+.voted-text { font-size: 15px; font-weight: 600; color: var(--sage); margin-bottom: 4px; }
+.voted-sub { font-size: 13px; color: var(--muted); }
+
+/* ── STUDENT RESULT SCREEN ── */
+#result-screen {
+  align-items: center; justify-content: center; padding: 24px;
+  background: radial-gradient(ellipse at 50% 0%, #1a0f0a 0%, var(--bg) 70%);
+}
+.result-inner { max-width: 400px; width: 100%; text-align: center; }
+.result-title { font-family: var(--mono); font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.result-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+.result-nwc-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+.result-nwc-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+.result-nwc-val { font-family: var(--mono); font-size: 42px; font-weight: 700; margin-bottom: 8px; }
+.result-nwc-val.conservative { color: var(--sage); }
+.result-nwc-val.watch  { color: var(--gold); }
+.result-nwc-val.caution{ color: var(--amber); }
+.result-nwc-val.danger { color: var(--down); }
+.result-policy { display: inline-block; padding: 6px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.result-policy.conservative { background: rgba(52,211,153,0.15); color: var(--sage); border: 1px solid rgba(52,211,153,0.3); }
+.result-policy.watch  { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
+.result-policy.caution{ background: rgba(249,115,22,0.15); color: var(--amber); border: 1px solid rgba(249,115,22,0.3); }
+.result-policy.danger { background: rgba(239,68,68,0.15); color: var(--down); border: 1px solid rgba(239,68,68,0.3); }
+
+/* ── HOST SCREEN ── */
+#host-screen { padding: 0; background: var(--bg); }
+.host-header {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+}
+.host-title { font-family: var(--mono); font-size: 18px; font-weight: 700; color: #fff; }
+.host-title span { color: var(--terra); }
+.host-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.host-controls { display: flex; gap: 10px; align-items: center; }
+
+.btn-host { padding: 10px 20px; border-radius: 10px; border: none; font-size: 14px; font-weight: 600; font-family: var(--sans); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.btn-host:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-host:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.btn-start  { background: linear-gradient(135deg, #8b2500, var(--terra)); color: #fff; }
+.btn-reveal { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #fff; }
+.btn-next   { background: linear-gradient(135deg, #065f46, var(--teal)); color: #fff; }
+.btn-summary{ background: linear-gradient(135deg, #5b21b6, var(--purple)); color: #fff; }
+.btn-ghost  { background: var(--bg3); border: 1px solid var(--border2); color: var(--muted); }
+.btn-ghost:hover { border-color: var(--terra); color: var(--terra); background: var(--bg3); }
+
+/* HOST WAITING */
+.host-waiting { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center; flex: 1; }
+.big-player-count { font-family: var(--mono); font-size: 88px; font-weight: 700; color: var(--terra); line-height: 1; margin: 12px 0; }
+.big-player-label { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+.lobby-url { font-family: var(--mono); font-size: 15px; color: var(--teal); background: var(--bg2); padding: 12px 24px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 20px; }
+.host-players-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 700px; margin-bottom: 32px; }
+
+/* HOST DEMO */
+.host-demo-body {
+  flex: 1; display: grid; grid-template-columns: 1fr 440px; overflow: hidden;
+}
+.demo-left { padding: 28px 32px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid var(--border); overflow-y: auto; gap: 16px; }
+.demo-tag { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra); font-family: var(--mono); }
+.demo-heading { font-family: var(--mono); font-size: 26px; font-weight: 700; color: #fff; line-height: 1.2; }
+.formula-box { background: var(--bg2); border-radius: 14px; padding: 20px; border: 1px solid var(--border); text-align: center; }
+.formula-eq { font-size: 22px; margin-bottom: 16px; }
+.f-nwc { font-family: var(--mono); font-weight: 700; color: var(--terra); }
+.f-eq  { color: var(--text); margin: 0 10px; }
+.f-ca  { color: var(--teal); font-weight: 600; }
+.f-mi  { color: var(--muted); margin: 0 10px; }
+.f-cl  { color: var(--terra2); font-weight: 600; }
+.demo-ca-cl { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.demo-ca-box { background: rgba(45,212,191,0.08); border: 1px solid rgba(45,212,191,0.3); border-radius: 10px; padding: 14px; }
+.demo-cl-box { background: rgba(232,93,58,0.08); border: 1px solid rgba(232,93,58,0.3); border-radius: 10px; padding: 14px; }
+.demo-box-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+.demo-box-val { font-family: var(--mono); font-size: 22px; font-weight: 700; }
+.demo-box-sub { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+.demo-nwc-result { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.3); border-radius: 10px; padding: 14px; text-align: center; }
+.demo-note { background: var(--bg2); border-left: 3px solid var(--teal); padding: 12px 16px; border-radius: 0 10px 10px 0; font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* HOST ROUND - 2-column layout */
+.host-round-body {
+  flex: 1; display: grid;
+  grid-template-columns: 1fr 440px;
+  grid-template-rows: 1fr auto;
   overflow: hidden;
-  position: relative;
+}
+.round-left {
+  grid-row: 1/2; grid-column: 1/2;
+  padding: 20px 24px; display: flex; flex-direction: column; gap: 14px;
+  overflow-y: auto; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.nwc-panel {
+  grid-row: 1/2; grid-column: 2/3;
+  background: var(--bg2); display: flex; flex-direction: column;
+  padding: 18px 20px; gap: 0; overflow-y: auto; border-bottom: 1px solid var(--border);
+}
+.host-ctrl-bar {
+  grid-row: 2/3; grid-column: 1/3;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 14px 24px; display: flex; align-items: center; gap: 14px;
 }
 
-.vote-bar-fill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  display: flex;
-  align-items: center;
-  padding-left: 12px;
+.round-badge { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra); font-family: var(--mono); margin-bottom: 6px; }
+.round-title-h { font-family: var(--mono); font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 10px; line-height: 1.2; }
+.scenario-box { background: var(--bg2); border-left: 3px solid var(--terra); padding: 14px 18px; border-radius: 0 10px 10px 0; font-size: 14px; color: var(--muted); line-height: 1.6; flex-shrink: 0; }
+
+/* Vote bars — always show full text */
+.vote-bars { display: flex; flex-direction: column; gap: 10px; flex: 1; min-height: 0; }
+.vb-row { display: grid; grid-template-columns: 32px 1fr 40px; align-items: start; gap: 10px; }
+.vb-letter { width: 32px; height: 32px; background: var(--terra); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; margin-top: 6px; }
+.vb-track {
+  background: var(--bg3); border-radius: 8px; overflow: hidden;
+  position: relative; min-height: 58px;
+}
+.vb-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  border-radius: 8px; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
   min-width: 0;
-  width: 0%;
 }
-
-.vote-bar-fill.option-0 { background: linear-gradient(90deg, var(--teal), rgba(45,212,191,0.6)); }
-.vote-bar-fill.option-1 { background: linear-gradient(90deg, var(--gold), rgba(245,158,11,0.6)); }
-.vote-bar-fill.option-2 { background: linear-gradient(90deg, var(--terra), rgba(232,93,58,0.6)); }
-
-.vote-bar-label {
-  font-size: 12px;
-  color: var(--white);
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.vb-fill.opt0 { background: linear-gradient(90deg, rgba(45,212,191,0.35), rgba(45,212,191,0.1)); }
+.vb-fill.opt1 { background: linear-gradient(90deg, rgba(245,158,11,0.35), rgba(245,158,11,0.1)); }
+.vb-fill.opt2 { background: linear-gradient(90deg, rgba(232,93,58,0.35), rgba(232,93,58,0.1)); }
+.vb-text-overlay {
+  position: relative; z-index: 1; padding: 8px 12px;
+  pointer-events: none;
 }
-
-.vote-bar-count {
-  font-family: 'DM Mono', monospace;
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--white);
-  text-align: right;
-}
+.vb-opt-main { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+.vb-opt-effect { font-size: 11px; color: var(--teal); font-family: var(--mono); line-height: 1.4; white-space: pre-wrap; }
+.vb-pct { position: absolute; top: 6px; right: 8px; font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.4); z-index: 2; }
+.vb-count { font-family: var(--mono); font-size: 22px; font-weight: 700; color: #fff; margin-top: 8px; text-align: right; }
 
 /* Winner banner */
 .winner-banner {
-  background: linear-gradient(135deg, rgba(232,93,58,0.2), rgba(232,93,58,0.05));
-  border: 1px solid var(--terra);
-  border-radius: 12px;
-  padding: 16px 20px;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  animation: slideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: linear-gradient(135deg, rgba(232,93,58,0.15), rgba(232,93,58,0.03));
+  border: 1px solid var(--terra); border-radius: 12px; padding: 16px 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+  animation: slideUp 0.5s cubic-bezier(0.34,1.56,0.64,1);
 }
+@keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.winner-letter { width: 40px; height: 40px; background: var(--terra); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.winner-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--terra); margin-bottom: 3px; }
+.winner-main { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+.winner-effect { font-family: var(--mono); font-size: 12px; color: var(--teal); }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.explain-box {
+  background: rgba(45,212,191,0.06); border: 1px solid rgba(45,212,191,0.2);
+  border-radius: 10px; padding: 14px 16px;
+  animation: slideUp 0.5s ease 0.1s both;
 }
+.explain-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); font-family: var(--mono); margin-bottom: 10px; }
+.explain-row { display: flex; gap: 8px; font-size: 12px; margin-bottom: 5px; line-height: 1.4; }
+.explain-arrow { color: var(--terra); font-weight: 700; flex-shrink: 0; }
+.explain-text { color: var(--muted); }
+.explain-lesson { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(45,212,191,0.2); font-size: 12px; color: var(--muted); font-style: italic; }
 
-.winner-letter {
-  width: 40px; height: 40px;
-  background: var(--terra);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; font-weight: 700;
-  color: var(--white);
-  flex-shrink: 0;
-}
+/* NWC PANEL */
+.panel-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.panel-company { font-family: var(--mono); font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 14px; }
 
-.winner-content { flex: 1; }
-.winner-label { font-size: 11px; color: var(--terra); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-.winner-text { font-size: 15px; color: var(--white); font-weight: 600; margin: 4px 0; }
-.winner-effect { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--dim); }
+.bs-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 6px; }
+.bs-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.bs-row-label { font-size: 12px; color: var(--muted); }
+.bs-row-val { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text); transition: color 0.3s; }
+.bs-total { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; margin-top: 2px; }
+.bs-total-label { font-size: 13px; font-weight: 600; }
+.bs-total-val { font-family: var(--mono); font-size: 15px; font-weight: 700; }
 
-/* NWC Dashboard */
-.nwc-title {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.nwc-company {
-  font-family: 'Playfair Display', serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--white);
-}
-
-.bs-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.bs-label { font-size: 12px; color: var(--dim); }
-.bs-value {
-  font-family: 'DM Mono', monospace;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text);
-  transition: color 0.5s;
-}
-
-.bs-value.changed { color: var(--terra2); animation: flashChange 1s ease; }
-.bs-value.up { color: var(--sage); }
-
-@keyframes flashChange {
-  0% { transform: scale(1.3); }
-  100% { transform: scale(1); }
-}
+@keyframes flash { 0% { transform: scale(1.5); } 100% { transform: scale(1); } }
+.flash { animation: flash 0.6s ease; }
 
 .nwc-big {
-  background: var(--darker);
-  border-radius: 12px;
-  padding: 16px;
-  text-align: center;
-  border: 1px solid var(--border);
-  margin-top: 4px;
+  background: var(--bg3); border-radius: 12px; padding: 16px;
+  text-align: center; margin: 14px 0 10px; border: 1px solid var(--border);
 }
-
-.nwc-big-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-
-.nwc-big-value {
-  font-family: 'Playfair Display', serif;
-  font-size: 38px;
-  font-weight: 900;
-  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.nwc-big-value.conservative { color: var(--sage); }
-.nwc-big-value.watch { color: var(--gold); }
-.nwc-big-value.caution { color: var(--amber); }
-.nwc-big-value.danger { color: var(--danger); }
-
-.policy-pill {
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-top: 8px;
-  transition: all 0.5s;
-}
-
+.nwc-big-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 6px; font-family: var(--mono); }
+.nwc-num { font-family: var(--mono); font-size: 44px; font-weight: 700; transition: all 0.8s cubic-bezier(0.34,1.56,0.64,1); line-height: 1.1; }
+.nwc-num.conservative { color: var(--sage); }
+.nwc-num.watch  { color: var(--gold); }
+.nwc-num.caution{ color: var(--amber); }
+.nwc-num.danger { color: var(--down); }
+.nwc-change { font-family: var(--mono); font-size: 13px; margin: 6px 0; padding: 3px 10px; border-radius: 6px; display: inline-block; }
+.nwc-change.neg { color: var(--down); background: rgba(239,68,68,0.1); }
+.nwc-change.pos { color: var(--sage); background: rgba(52,211,153,0.1); }
+.nwc-change.neu { color: var(--gold); background: rgba(245,158,11,0.1); }
+.policy-pill { display: inline-block; padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
 .policy-pill.conservative { background: rgba(52,211,153,0.15); color: var(--sage); border: 1px solid rgba(52,211,153,0.3); }
-.policy-pill.watch { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
-.policy-pill.caution { background: rgba(249,115,22,0.15); color: var(--amber); border: 1px solid rgba(249,115,22,0.3); }
-.policy-pill.danger { background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); }
+.policy-pill.watch  { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
+.policy-pill.caution{ background: rgba(249,115,22,0.15); color: var(--amber); border: 1px solid rgba(249,115,22,0.3); }
+.policy-pill.danger { background: rgba(239,68,68,0.15); color: var(--down); border: 1px solid rgba(239,68,68,0.3); }
 
-.nwc-change-tag {
-  font-family: 'DM Mono', monospace;
-  font-size: 13px;
-  margin-top: 6px;
-  padding: 4px 10px;
-  border-radius: 6px;
-}
+.chart-wrap { background: var(--bg3); border-radius: 10px; padding: 12px; margin-top: 8px; border: 1px solid var(--border); }
+.chart-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-family: var(--mono); margin-bottom: 8px; }
 
-.nwc-change-tag.negative { color: var(--danger); background: rgba(239,68,68,0.1); }
-.nwc-change-tag.positive { color: var(--sage); background: rgba(52,211,153,0.1); }
-.nwc-change-tag.neutral  { color: var(--gold); background: rgba(245,158,11,0.1); }
-
-/* Explanation box */
-.explanation-box {
-  background: rgba(45,212,191,0.06);
-  border: 1px solid rgba(45,212,191,0.2);
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin-top: 4px;
-  animation: slideIn 0.5s ease;
-}
-
-.explanation-box .ex-title {
-  font-size: 11px;
-  color: var(--teal);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-}
-
-.explanation-box .ex-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.ex-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 12px;
-}
-
-.ex-arrow { color: var(--terra); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-.ex-text { color: var(--dim); line-height: 1.4; }
-
-/* Controls */
-.ctrl-btn {
-  background: var(--terra);
-  color: var(--white);
-  border: none;
-  border-radius: 10px;
-  padding: 12px 24px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.ctrl-btn:hover { background: var(--terra2); transform: translateY(-1px); }
-.ctrl-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-.ctrl-btn.secondary { background: var(--card); border: 1px solid var(--border); color: var(--text); }
-.ctrl-btn.secondary:hover { border-color: var(--terra); color: var(--terra); background: var(--card); }
-.ctrl-btn.teal-btn { background: var(--teal); color: var(--darker); }
-.ctrl-btn.teal-btn:hover { background: #5eead4; }
-
-.vote-progress {
-  font-size: 13px;
-  color: var(--dim);
-  font-family: 'DM Mono', monospace;
-}
-
-.vote-progress span { color: var(--teal); font-weight: 600; }
-
-/* Summary screen */
-#summary-screen {
-  padding: 0;
-  overflow-y: auto;
-}
-
-.summary-header {
-  padding: 32px 40px 24px;
-  border-bottom: 1px solid var(--border);
-}
-
-.summary-header h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 28px;
-  font-weight: 900;
-  color: var(--white);
-  margin-bottom: 4px;
-}
-
-.summary-header p { color: var(--dim); font-size: 14px; }
-
-.summary-body {
-  padding: 24px 40px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.journey-chart {
-  grid-column: 1 / 3;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-}
-
-.journey-title {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--muted);
-  margin-bottom: 20px;
-}
-
-.journey-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  height: 120px;
-}
-
-.journey-bar-wrap {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  height: 100%;
-  justify-content: flex-end;
-}
-
-.journey-bar {
-  width: 100%;
-  border-radius: 6px 6px 0 0;
-  transition: height 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-}
-
-.journey-bar-val {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--text);
-  font-weight: 600;
-}
-
-.journey-bar-lbl {
-  font-size: 10px;
-  color: var(--muted);
-  text-align: center;
-}
-
-.lesson-cards {
-  grid-column: 1 / 3;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.lesson-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-}
-
-.lesson-round {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--terra);
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.lesson-heading {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--white);
-  margin-bottom: 6px;
-  line-height: 1.3;
-}
-
-.lesson-nwc {
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  color: var(--sage);
-  margin-bottom: 6px;
-}
-
-.lesson-text { font-size: 11px; color: var(--dim); line-height: 1.4; }
-
-.compare-row {
-  grid-column: 1 / 3;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.compare-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-}
-
-.compare-company { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-.compare-nwc {
-  font-family: 'Playfair Display', serif;
-  font-size: 28px;
-  font-weight: 900;
-  margin-bottom: 6px;
-}
-
-.compare-nwc.your { color: var(--terra); }
-.compare-nwc.eleven { color: var(--teal); }
-.compare-nwc.cdp { color: #a78bfa; }
-
-.compare-policy { font-size: 12px; color: var(--dim); }
+/* Vote progress */
+.vote-prog { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.vote-prog span { color: var(--teal); font-weight: 700; }
 
 /* Progress dots */
-.progress-dots {
-  display: flex;
-  gap: 6px;
-}
+.progress-dots { display: flex; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); transition: all 0.3s; }
+.dot.active { background: var(--terra); transform: scale(1.4); }
+.dot.done   { background: var(--sage); }
 
-.dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--border);
-  transition: all 0.3s;
-}
+/* HOST SUMMARY */
+.host-summary-body { flex: 1; overflow-y: auto; }
+.summary-header { padding: 28px 32px 20px; border-bottom: 1px solid var(--border); }
+.summary-h2 { font-family: var(--mono); font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.summary-sub { color: var(--muted); font-size: 14px; }
+.summary-inner { padding: 24px 32px; display: flex; flex-direction: column; gap: 20px; }
+.journey-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+.journey-title { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); font-family: var(--mono); margin-bottom: 16px; }
+.journey-bars-wrap { display: flex; align-items: flex-end; gap: 8px; height: 130px; }
+.jb-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; height: 100%; justify-content: flex-end; }
+.jb-bar { width: 100%; border-radius: 6px 6px 0 0; transition: height 1s cubic-bezier(0.34,1.56,0.64,1); min-height: 4px; }
+.jb-val { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--text); }
+.jb-lbl { font-size: 10px; color: var(--muted); text-align: center; }
+.lesson-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.lesson-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.lesson-round { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--terra); font-weight: 600; margin-bottom: 6px; }
+.lesson-heading { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 5px; line-height: 1.3; }
+.lesson-nwc { font-family: var(--mono); font-size: 12px; color: var(--teal); margin-bottom: 5px; }
+.lesson-text { font-size: 11px; color: var(--muted); line-height: 1.4; }
+.compare-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.compare-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+.compare-company { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.compare-nwc { font-family: var(--mono); font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+.compare-nwc.yours { color: var(--terra); }
+.compare-nwc.real11 { color: var(--teal); }
+.compare-nwc.cdp { color: var(--purple); }
+.compare-pol { font-size: 12px; color: var(--muted); }
 
-.dot.active { background: var(--terra); transform: scale(1.3); }
-.dot.done { background: var(--sage); }
+/* TOAST */
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--bg2); border: 1px solid var(--border2); border-radius: 20px; padding: 10px 20px; font-size: 14px; font-weight: 500; transition: transform 0.3s ease; z-index: 100; white-space: nowrap; pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: rgba(52,211,153,0.4); color: var(--sage); }
+.toast.error   { border-color: rgba(239,68,68,0.4); color: var(--down); }
 
-/* Demo screen */
-.demo-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px;
-  max-width: 600px;
-  width: 100%;
-}
-
-.demo-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 16px;
-}
-
-.demo-formula {
-  background: var(--darker);
-  border-radius: 10px;
-  padding: 16px 20px;
-  text-align: center;
-  margin-bottom: 20px;
-  border: 1px solid var(--border);
-}
-
-.demo-formula .f-nwc { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--terra); font-weight: 700; }
-.demo-formula .f-eq { color: var(--text); margin: 0 12px; font-size: 22px; }
-.demo-formula .f-ca { color: var(--teal); font-weight: 600; font-size: 18px; }
-.demo-formula .f-minus { color: var(--dim); margin: 0 12px; font-size: 22px; }
-.demo-formula .f-cl { color: var(--terra2); font-weight: 600; font-size: 18px; }
-
-.demo-bs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.demo-bs-item {
-  background: var(--darker);
-  border-radius: 8px;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-}
-
-.demo-bs-item.teal-border { border-color: rgba(45,212,191,0.4); }
-.demo-bs-item.terra-border { border-color: rgba(232,93,58,0.4); }
-
-.demo-bs-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
-.demo-bs-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: var(--text); }
-.demo-bs-val.teal { color: var(--teal); }
-.demo-bs-val.terra { color: var(--terra2); }
-
-.demo-nwc-result {
-  background: linear-gradient(135deg, rgba(52,211,153,0.1), rgba(45,212,191,0.05));
-  border: 1px solid rgba(52,211,153,0.3);
-  border-radius: 10px;
-  padding: 14px 18px;
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.demo-nwc-result .nwc-eq { font-size: 14px; color: var(--dim); margin-bottom: 4px; }
-.demo-nwc-result .nwc-val { font-family: 'DM Mono', monospace; font-size: 28px; color: var(--sage); font-weight: 500; }
-.demo-nwc-result .nwc-pol { font-size: 13px; color: var(--sage); margin-top: 4px; }
-
-.demo-note { font-size: 13px; color: var(--dim); line-height: 1.5; margin-bottom: 16px; }
-
-/* Responsive host view */
-@media (max-height: 800px) {
-  .host-nwc { padding: 14px; gap: 8px; }
-  .nwc-big { padding: 10px; }
-  .nwc-big-value { font-size: 30px; }
-  .round-title { font-size: 22px; }
-}
-
-/* Animations */
-.animate-in {
-  animation: animIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes animIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+.hidden { display: none !important; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     STUDENT: LANDING / JOIN
-═══════════════════════════════════════════ -->
-<div id="landing" class="screen hidden">
-  <div class="landing-card">
-    <div class="landing-logo">Frostgate Studios</div>
-    <div class="landing-title">Board of Directors</div>
-    <div class="landing-sub">Join the board and vote on decisions that shape the company's financial future.</div>
+<!-- ═══ JOIN SCREEN ═══ -->
+<div id="join-screen" class="screen active">
+  <div class="join-inner">
+    <div class="join-logo">🏢</div>
+    <div class="join-title">FROSTGATE STUDIOS</div>
+    <div class="join-sub">Board of Directors — NWC Simulator</div>
+    <div class="start-badge">💼 Board member voting simulation</div>
     <div class="input-group">
       <label>Your Name</label>
-      <input type="text" id="player-name" placeholder="e.g. Anna K." maxlength="20">
+      <input type="text" id="player-name-input" placeholder="e.g. Anna K." maxlength="24" autocomplete="off">
     </div>
-    <button class="btn-primary" id="join-btn" onclick="joinGame()">Join the Board</button>
-    <div class="player-count" id="join-count">Loading...</div>
+    <button class="btn btn-primary" onclick="joinGame()">Join the Board →</button>
+    <br>
+    <button class="host-toggle" onclick="toggleHostSection()">I am the host</button>
+    <div class="host-section hidden" id="host-section">
+      <div class="input-group" style="margin-top:12px">
+        <label>Host PIN</label>
+        <input type="password" id="host-pin-input" placeholder="Enter PIN" maxlength="6">
+      </div>
+      <button class="btn btn-secondary" onclick="joinAsHost()">Enter Host View →</button>
+    </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     STUDENT: WAITING ROOM
-═══════════════════════════════════════════ -->
-<div id="waiting" class="screen hidden">
-  <div class="waiting-pulse">
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--terra)" stroke-width="2">
-      <circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-    </svg>
+<!-- ═══ WAITING SCREEN ═══ -->
+<div id="waiting-screen" class="screen">
+  <div class="waiting-inner">
+    <div class="pulse-ring">⏳</div>
+    <div class="waiting-title">You're in the boardroom</div>
+    <div class="waiting-sub">Waiting for the host to start the session...</div>
+    <div class="player-count" id="wait-count">0</div>
+    <div class="player-count-label">board members connected</div>
+    <div class="players-list" id="wait-players-list"></div>
+    <p style="font-size:13px;color:var(--muted)">Keep this tab open 📱</p>
   </div>
-  <div class="waiting-title">You're in the boardroom</div>
-  <div class="waiting-sub">Waiting for the host to start the session...</div>
-  <div class="player-badge" id="waiting-name">Board Member</div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     STUDENT: VOTE SCREEN
-═══════════════════════════════════════════ -->
-<div id="vote-screen" class="hidden" style="padding:20px; max-width:480px; margin:0 auto; width:100%;">
-  <div class="round-badge" id="s-round-badge">Round 1 of 4</div>
-  <div class="scenario-card">
-    <div class="scenario-title" id="s-scenario-title">Scenario</div>
-    <div class="scenario-body" id="s-scenario-body">Loading...</div>
-    <div class="nwc-mini">
-      <div>
-        <div class="nwc-mini-label">Current NWC</div>
-        <div class="nwc-mini-value" id="s-nwc">PLN 65M</div>
-      </div>
-      <div style="text-align:right">
-        <div class="nwc-mini-label">Policy</div>
-        <div style="font-size:13px; color:var(--sage); font-weight:600;" id="s-policy">Conservative</div>
-      </div>
+<!-- ═══ STUDENT VOTE SCREEN ═══ -->
+<div id="vote-screen" class="screen">
+  <div class="vote-header">
+    <div>
+      <div class="round-label">Round</div>
+      <div class="round-val" id="s-round-val">1 / 4</div>
+    </div>
+    <div class="nwc-header-val">
+      <div class="nwc-header-label">Current NWC</div>
+      <div class="nwc-header-num" id="s-nwc-header">PLN 65M</div>
     </div>
   </div>
-  <div class="options-list" id="s-options"></div>
-  <div id="voted-state" class="hidden voted-msg">
+  <div class="scenario-block">
+    <div class="scenario-label">📋 Board Motion</div>
+    <div class="scenario-title-s" id="s-title">Loading...</div>
+    <div class="scenario-body-s" id="s-body">...</div>
+  </div>
+  <div class="section-title">Cast your vote — tap one option</div>
+  <div class="options-list-s" id="s-options"></div>
+  <div id="s-voted" class="voted-block hidden">
     <div class="voted-icon">✓</div>
-    <p>Vote submitted!</p>
-    <small>Waiting for results on the main screen...</small>
+    <div class="voted-text">Vote submitted!</div>
+    <div class="voted-sub">Check the main screen for live results →</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     STUDENT: RESULTS VIEW (after reveal)
-═══════════════════════════════════════════ -->
-<div id="result-screen" class="screen hidden" style="text-align:center; padding:24px; max-width:420px;">
-  <div style="font-size:48px; margin-bottom:12px;">📊</div>
-  <div style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:8px;" id="r-title">Results are in!</div>
-  <div style="color:var(--dim); font-size:14px; margin-bottom:24px;" id="r-body">Check the main screen for the full breakdown.</div>
-  <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px;">
-    <div style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">NWC After This Round</div>
-    <div style="font-family:'Playfair Display',serif; font-size:36px; font-weight:900;" id="r-nwc" class="nwc-big-value conservative">PLN 65M</div>
-    <div class="policy-pill conservative" id="r-policy">Conservative</div>
+<!-- ═══ STUDENT RESULT SCREEN ═══ -->
+<div id="result-screen" class="screen">
+  <div class="result-inner">
+    <div style="font-size:48px;margin-bottom:12px">📊</div>
+    <div class="result-title" id="r-title">Results are in!</div>
+    <div class="result-sub" id="r-sub">Check the main screen for the full breakdown.</div>
+    <div class="result-nwc-card">
+      <div class="result-nwc-label">Company NWC After This Round</div>
+      <div class="result-nwc-val conservative" id="r-nwc-val">PLN 65M</div>
+      <div class="result-policy conservative" id="r-policy">Conservative</div>
+    </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     HOST VIEW
-═══════════════════════════════════════════ -->
-<div id="host-view" class="hidden" style="min-height:100vh; display:flex; flex-direction:column;">
-  <div class="host-topbar">
-    <div style="display:flex; align-items:center; gap:16px;">
-      <div class="host-brand">Frostgate Studios — <span>Board of Directors</span></div>
-      <div class="progress-dots" id="progress-dots">
-        <div class="dot" id="dot-0"></div>
-        <div class="dot" id="dot-1"></div>
-        <div class="dot" id="dot-2"></div>
-        <div class="dot" id="dot-3"></div>
-      </div>
+<!-- ═══ HOST SCREEN ═══ -->
+<div id="host-screen" class="screen">
+  <div class="host-header">
+    <div>
+      <div class="host-title">Frostgate Studios — <span>Board of Directors</span></div>
+      <div class="host-subtitle" id="host-status-label">Waiting for board members...</div>
     </div>
-    <div class="host-meta">
-      <div class="meta-chip active" id="player-count-chip">0 directors</div>
-      <div class="meta-chip" id="phase-chip">Lobby</div>
+    <div class="host-controls">
+      <button class="btn-host btn-start" id="btn-start" onclick="hostStart()">▶ Start Session</button>
+      <button class="btn-host btn-reveal hidden" id="btn-reveal" onclick="hostReveal()">Reveal Results</button>
+      <button class="btn-host btn-next hidden" id="btn-next" onclick="hostNextRound()">Next Round →</button>
+      <button class="btn-host btn-summary hidden" id="btn-summary" onclick="hostShowSummary()">View Summary →</button>
+      <button class="btn-host btn-ghost" onclick="hostRestart()">↺ Restart</button>
     </div>
   </div>
 
-  <!-- LOBBY STATE -->
-  <div id="host-lobby" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px;">
-    <div style="font-size:13px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:8px;">BOARD SESSION CODE</div>
-    <div class="lobby-code">3123</div>
-    <div class="lobby-url" id="lobby-url">loading url...</div>
-    <div style="font-size:14px; color:var(--dim); margin-bottom:16px;">Directors joining:</div>
-    <div class="players-grid" id="players-grid"></div>
-    <button class="ctrl-btn" style="margin-top:32px; padding:16px 48px; font-size:16px;" id="start-btn" onclick="startDemo()">
-      ▶  Start Session
-    </button>
+  <!-- LOBBY -->
+  <div id="host-lobby" class="host-waiting">
+    <div style="font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)">SESSION LIVE AT</div>
+    <div class="lobby-url">https://mukam-dev.github.io/nwc-sim/</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:4px">Board members connected:</div>
+    <div class="big-player-count" id="lobby-count">0</div>
+    <div class="host-players-grid" id="host-players-grid"></div>
   </div>
 
-  <!-- DEMO STATE -->
-  <div id="host-demo" class="hidden" style="flex:1; display:grid; grid-template-columns:1fr 380px; overflow:hidden;">
-    <div style="padding:32px 36px; display:flex; flex-direction:column; justify-content:center; border-right:1px solid var(--border);">
-      <div style="font-size:13px; letter-spacing:3px; text-transform:uppercase; color:var(--terra); margin-bottom:12px;">DEMO ROUND</div>
-      <div style="font-family:'Playfair Display',serif; font-size:30px; font-weight:700; color:var(--white); margin-bottom:20px;">How Net Working Capital Works</div>
-
-      <div style="background:var(--card); border-radius:12px; padding:20px; margin-bottom:16px; border:1px solid var(--border);">
-        <div class="demo-formula" style="background:var(--darker); margin-bottom:16px;">
-          <span class="f-nwc">NWC</span><span class="f-eq">=</span><span class="f-ca">Current Assets</span><span class="f-minus">−</span><span class="f-cl">Current Liabilities</span>
+  <!-- DEMO -->
+  <div id="host-demo" class="hidden host-demo-body">
+    <div class="demo-left">
+      <div class="demo-tag">Demo Round</div>
+      <div class="demo-heading">How Net Working Capital Works</div>
+      <div class="formula-box">
+        <div class="formula-eq">
+          <span class="f-nwc">NWC</span><span class="f-eq">=</span><span class="f-ca">Current Assets</span><span class="f-mi">−</span><span class="f-cl">Current Liabilities</span>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
-          <div style="background:rgba(45,212,191,0.08); border:1px solid rgba(45,212,191,0.3); border-radius:10px; padding:16px;">
-            <div style="font-size:11px; color:var(--teal); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Current Assets</div>
-            <div style="font-family:'DM Mono',monospace; font-size:22px; color:var(--teal);">PLN 85M</div>
-            <div style="font-size:11px; color:var(--dim); margin-top:6px; line-height:1.4;">Cash (60M) + Receivables (25M)<br>What the company owns / is owed in &lt;12 months</div>
+        <div class="demo-ca-cl">
+          <div class="demo-ca-box">
+            <div class="demo-box-label">Current Assets</div>
+            <div class="demo-box-val" style="color:var(--teal)">PLN 85M</div>
+            <div class="demo-box-sub">Cash (60M) + Receivables (25M)<br>What the company owns / is owed within 12 months</div>
           </div>
-          <div style="background:rgba(232,93,58,0.08); border:1px solid rgba(232,93,58,0.3); border-radius:10px; padding:16px;">
-            <div style="font-size:11px; color:var(--terra); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Current Liabilities</div>
-            <div style="font-family:'DM Mono',monospace; font-size:22px; color:var(--terra);">PLN 20M</div>
-            <div style="font-size:11px; color:var(--dim); margin-top:6px; line-height:1.4;">Payables (8M) + Loan (5M) + Accrued (7M)<br>What the company owes within 12 months</div>
+          <div class="demo-cl-box">
+            <div class="demo-box-label">Current Liabilities</div>
+            <div class="demo-box-val" style="color:var(--terra)">PLN 20M</div>
+            <div class="demo-box-sub">Payables (8M) + Loan (5M) + Accrued (7M)<br>What the company owes within 12 months</div>
           </div>
         </div>
-        <div style="background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.3); border-radius:10px; padding:14px; text-align:center;">
-          <div style="font-size:13px; color:var(--dim); margin-bottom:4px;">NWC = PLN 85M − PLN 20M</div>
-          <div style="font-family:'Playfair Display',serif; font-size:36px; color:var(--sage); font-weight:900;">PLN 65M</div>
-          <div style="font-size:14px; color:var(--sage); margin-top:4px;">✓ Conservative Policy — NWC &gt; 0</div>
+        <div class="demo-nwc-result">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:4px">PLN 85M − PLN 20M</div>
+          <div style="font-family:var(--mono);font-size:38px;color:var(--sage);font-weight:700">PLN 65M</div>
+          <div style="font-size:13px;color:var(--sage);margin-top:4px">✓ Conservative Policy — NWC &gt; 0</div>
         </div>
       </div>
-      <div style="background:var(--card); border-left:3px solid var(--teal); padding:14px 18px; border-radius:0 10px 10px 0; font-size:14px; color:var(--dim); line-height:1.6;">
-        In each of the 4 rounds, a situation arises. Your board votes on what to do. The winning option changes the balance sheet — and NWC shifts live on screen. Watch the right panel carefully.
-      </div>
+      <div class="demo-note">In each of the 4 rounds a situation arises. The board votes. The winning option changes the balance sheet — and NWC shifts live on the right panel. Watch the numbers move.</div>
     </div>
-    <div style="padding:20px; display:flex; flex-direction:column; gap:12px; background:var(--card);">
-      <div class="nwc-title">FROSTGATE BALANCE SHEET</div>
-      <div class="nwc-company">Starting Position</div>
-      <div class="bs-row"><span class="bs-label">Cash & Equivalents</span><span class="bs-value">PLN 60M</span></div>
-      <div class="bs-row"><span class="bs-label">Trade Receivables</span><span class="bs-value">PLN 25M</span></div>
-      <div class="bs-row" style="border-top:2px solid var(--teal); padding-top:10px;"><span class="bs-label" style="color:var(--teal); font-weight:600;">Current Assets</span><span class="bs-value" style="color:var(--teal);">PLN 85M</span></div>
-      <div class="bs-row"><span class="bs-label">Trade Payables</span><span class="bs-value">PLN 8M</span></div>
-      <div class="bs-row"><span class="bs-label">Short-term Loan</span><span class="bs-value">PLN 5M</span></div>
-      <div class="bs-row"><span class="bs-label">Accrued Expenses</span><span class="bs-value">PLN 7M</span></div>
-      <div class="bs-row" style="border-top:2px solid var(--terra); padding-top:10px;"><span class="bs-label" style="color:var(--terra); font-weight:600;">Current Liabilities</span><span class="bs-value" style="color:var(--terra);">PLN 20M</span></div>
-      <div class="nwc-big">
+    <!-- NWC panel reused -->
+    <div class="nwc-panel" id="demo-nwc-panel">
+      <div class="panel-label">Starting Balance Sheet</div>
+      <div class="panel-company">Frostgate Studios</div>
+      <div class="bs-section" style="color:var(--teal)">CURRENT ASSETS</div>
+      <div class="bs-row"><span class="bs-row-label">Cash & Equivalents</span><span class="bs-row-val" style="color:var(--teal)">PLN 60M</span></div>
+      <div class="bs-row"><span class="bs-row-label">Trade Receivables</span><span class="bs-row-val" style="color:var(--teal)">PLN 25M</span></div>
+      <div class="bs-total" style="border-top:2px solid var(--teal);margin-top:4px"><span class="bs-total-label" style="color:var(--teal)">Current Assets</span><span class="bs-total-val" style="color:var(--teal)">PLN 85M</span></div>
+      <div class="bs-section" style="color:var(--terra);margin-top:12px">CURRENT LIABILITIES</div>
+      <div class="bs-row"><span class="bs-row-label">Trade Payables</span><span class="bs-row-val" style="color:var(--terra)">PLN 8M</span></div>
+      <div class="bs-row"><span class="bs-row-label">Short-term Loan</span><span class="bs-row-val" style="color:var(--terra)">PLN 5M</span></div>
+      <div class="bs-row"><span class="bs-row-label">Accrued Expenses</span><span class="bs-row-val" style="color:var(--terra)">PLN 7M</span></div>
+      <div class="bs-total" style="border-top:2px solid var(--terra);margin-top:4px"><span class="bs-total-label" style="color:var(--terra)">Current Liabilities</span><span class="bs-total-val" style="color:var(--terra)">PLN 20M</span></div>
+      <div class="nwc-big" style="margin-top:20px">
         <div class="nwc-big-label">NET WORKING CAPITAL</div>
-        <div class="nwc-big-value conservative">PLN 65M</div>
+        <div class="nwc-num conservative">PLN 65M</div>
         <div><span class="policy-pill conservative">Conservative</span></div>
       </div>
-      <button class="ctrl-btn teal-btn" onclick="startRound(0)" style="margin-top:auto;">Begin Round 1 →</button>
+      <button class="btn-host btn-next" style="margin-top:16px;width:100%;padding:14px" onclick="hostStartRound(0)">Begin Round 1 →</button>
     </div>
   </div>
 
-  <!-- ROUND STATE -->
-  <div id="host-round" class="hidden" style="flex:1; display:grid; grid-template-columns:1fr 380px; grid-template-rows:1fr auto; overflow:hidden;">
-
-    <!-- Main panel -->
-    <div style="grid-row:1/2; grid-column:1/2; padding:20px 28px; display:flex; flex-direction:column; gap:14px; overflow:hidden; border-right:1px solid var(--border); border-bottom:1px solid var(--border);">
-      <div class="round-header">
-        <div class="round-number" id="h-round-num">Round 1 of 4</div>
-        <div class="round-title" id="h-round-title">Game Delayed 6 Months</div>
+  <!-- ROUND -->
+  <div id="host-round" class="hidden host-round-body">
+    <div class="round-left">
+      <div>
+        <div class="round-badge" id="h-round-badge">Round 1 of 4</div>
+        <div class="round-title-h" id="h-round-title">—</div>
       </div>
-      <div class="scenario-text" id="h-scenario-text">...</div>
+      <div class="scenario-box" id="h-scenario-text">...</div>
       <div class="vote-bars" id="h-vote-bars"></div>
-      <div id="winner-wrap"></div>
-      <div id="explanation-wrap"></div>
+      <div id="h-winner-wrap"></div>
+      <div id="h-explain-wrap"></div>
     </div>
-
-    <!-- NWC Dashboard -->
-    <div style="grid-row:1/2; grid-column:2/3; padding:18px; display:flex; flex-direction:column; gap:10px; background:var(--card); border-bottom:1px solid var(--border); overflow-y:auto;">
-      <div class="nwc-title">BALANCE SHEET</div>
-      <div class="nwc-company">Frostgate Studios</div>
-      <div class="bs-row"><span class="bs-label">Cash</span><span class="bs-value" id="bs-cash">PLN 60M</span></div>
-      <div class="bs-row"><span class="bs-label">Receivables</span><span class="bs-value" id="bs-recv">PLN 25M</span></div>
-      <div class="bs-row" style="border-top:2px solid var(--teal); padding-top:8px;"><span class="bs-label" style="color:var(--teal);font-weight:600;">Current Assets</span><span class="bs-value" id="bs-ca" style="color:var(--teal);">PLN 85M</span></div>
-      <div class="bs-row"><span class="bs-label">Trade Payables</span><span class="bs-value" id="bs-pay">PLN 8M</span></div>
-      <div class="bs-row"><span class="bs-label">Short-term Loan</span><span class="bs-value" id="bs-loan">PLN 5M</span></div>
-      <div class="bs-row"><span class="bs-label">Accrued / Deferred</span><span class="bs-value" id="bs-accr">PLN 7M</span></div>
-      <div class="bs-row" style="border-top:2px solid var(--terra); padding-top:8px;"><span class="bs-label" style="color:var(--terra);font-weight:600;">Current Liabilities</span><span class="bs-value" id="bs-cl" style="color:var(--terra);">PLN 20M</span></div>
+    <div class="nwc-panel">
+      <div class="panel-label">BALANCE SHEET</div>
+      <div class="panel-company">Frostgate Studios</div>
+      <div class="bs-section" style="color:var(--teal)">CURRENT ASSETS</div>
+      <div class="bs-row"><span class="bs-row-label">Cash & Equivalents</span><span class="bs-row-val" id="bs-cash">PLN 60M</span></div>
+      <div class="bs-row"><span class="bs-row-label">Trade Receivables</span><span class="bs-row-val" id="bs-recv">PLN 25M</span></div>
+      <div class="bs-row"><span class="bs-row-label">Contract Assets / Other</span><span class="bs-row-val" id="bs-other">PLN 0M</span></div>
+      <div class="bs-total" style="border-top:2px solid var(--teal);margin-top:2px"><span class="bs-total-label" style="color:var(--teal)">Current Assets</span><span class="bs-total-val" id="bs-ca" style="color:var(--teal)">PLN 85M</span></div>
+      <div class="bs-section" style="color:var(--terra);margin-top:10px">CURRENT LIABILITIES</div>
+      <div class="bs-row"><span class="bs-row-label">Trade Payables</span><span class="bs-row-val" id="bs-pay">PLN 8M</span></div>
+      <div class="bs-row"><span class="bs-row-label">Short-term Loan</span><span class="bs-row-val" id="bs-loan">PLN 5M</span></div>
+      <div class="bs-row"><span class="bs-row-label">Accrued / Deferred Rev.</span><span class="bs-row-val" id="bs-accr">PLN 7M</span></div>
+      <div class="bs-total" style="border-top:2px solid var(--terra);margin-top:2px"><span class="bs-total-label" style="color:var(--terra)">Current Liabilities</span><span class="bs-total-val" id="bs-cl" style="color:var(--terra)">PLN 20M</span></div>
       <div class="nwc-big">
         <div class="nwc-big-label">NET WORKING CAPITAL</div>
-        <div class="nwc-big-value conservative" id="nwc-display">PLN 65M</div>
-        <div id="nwc-change" class="nwc-change-tag neutral" style="display:none;"></div>
-        <div><span class="policy-pill conservative" id="policy-display">Conservative</span></div>
+        <div class="nwc-num conservative" id="nwc-num">PLN 65M</div>
+        <div id="nwc-change-tag" class="hidden nwc-change neu"></div>
+        <div style="margin-top:8px"><span class="policy-pill conservative" id="policy-pill">Conservative</span></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-label">NWC JOURNEY</div>
+        <canvas id="nwc-chart" height="90"></canvas>
       </div>
     </div>
-
-    <!-- Controls -->
-    <div style="grid-row:2/3; grid-column:1/3; padding:14px 28px; display:flex; align-items:center; gap:14px; background:var(--card); border-top:1px solid var(--border);">
-      <button class="ctrl-btn" id="reveal-btn" onclick="revealResults()" disabled>Reveal Results</button>
-      <button class="ctrl-btn secondary" id="next-btn" onclick="nextRound()" style="display:none">Next Round →</button>
-      <button class="ctrl-btn teal-btn" id="summary-btn" onclick="showSummary()" style="display:none">View Summary →</button>
-      <div class="vote-progress" id="vote-progress-text"><span id="votes-in">0</span> of <span id="votes-total">0</span> board members voted</div>
-      <div style="margin-left:auto; display:flex; gap:8px;">
-        <div class="progress-dots">
-          <div class="dot" id="ctrl-dot-0"></div>
-          <div class="dot" id="ctrl-dot-1"></div>
-          <div class="dot" id="ctrl-dot-2"></div>
-          <div class="dot" id="ctrl-dot-3"></div>
+    <div class="host-ctrl-bar">
+      <button class="btn-host btn-reveal" id="h-reveal-btn" onclick="hostReveal()" disabled>Reveal Results</button>
+      <button class="btn-host btn-next hidden" id="h-next-btn" onclick="hostNextRound()">Next Round →</button>
+      <button class="btn-host btn-summary hidden" id="h-summary-btn" onclick="hostShowSummary()">View Summary →</button>
+      <div class="vote-prog"><span id="votes-in">0</span> / <span id="votes-total">0</span> voted</div>
+      <div style="margin-left:auto">
+        <div class="progress-dots" id="progress-dots">
+          <div class="dot" id="pd0"></div><div class="dot" id="pd1"></div>
+          <div class="dot" id="pd2"></div><div class="dot" id="pd3"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SUMMARY STATE -->
-  <div id="host-summary" class="hidden" style="flex:1; overflow-y:auto;">
+  <!-- SUMMARY -->
+  <div id="host-summary" class="hidden host-summary-body">
     <div class="summary-header">
-      <h2>Board Session Complete</h2>
-      <p>Here is how your decisions shaped Frostgate Studios' financial position</p>
+      <div class="summary-h2">Board Session Complete</div>
+      <div class="summary-sub">Here is how your decisions shaped Frostgate Studios</div>
     </div>
-    <div class="summary-body">
-      <div class="journey-chart">
+    <div class="summary-inner">
+      <div class="journey-card">
         <div class="journey-title">NWC JOURNEY ACROSS ALL ROUNDS</div>
-        <div class="journey-bars" id="journey-bars"></div>
+        <div class="journey-bars-wrap" id="journey-bars"></div>
       </div>
-      <div class="lesson-cards" id="lesson-cards"></div>
-      <div class="compare-row" id="compare-row"></div>
+      <div class="lesson-grid" id="lesson-cards"></div>
+      <div class="compare-grid" id="compare-cards"></div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     FIREBASE + GAME LOGIC
-═══════════════════════════════════════════ -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, get, push, onValue, update, remove }
-  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
-const firebaseConfig = {
+<script>
+// ═══════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════
+const HOST_PIN   = '3123';
+const POLL_MS    = 2500;
+const ROOT       = 'nwc-sim2';
+
+const FIREBASE_CONFIG = {
   apiKey: "AIzaSyD5l5AQZpDRmn9hS8SuYqy_4WSE_K4wokU",
   authDomain: "fed-game.firebaseapp.com",
   databaseURL: "https://fed-game-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "fed-game",
-  storageBucket: "fed-game.firebasestorage.app",
-  messagingSenderId: "595333604743",
-  appId: "1:595333604743:web:367fdd6e4cba7607e19f22"
 };
 
-const app = initializeApp(firebaseConfig);
-const db  = getDatabase(app);
-const ROOT = "nwc-sim";
-
-// ── GAME DATA ──────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// GAME DATA
+// ═══════════════════════════════════════════════════════
 const ROUNDS = [
   {
     title: "Game Delayed 6 Months",
-    scenario: "Your main game was supposed to launch in Q3. The lead developer says it needs 6 more months. No revenue is coming in. Monthly operating costs are PLN 3M — that's PLN 18M over 6 months. The Board must decide.",
+    scenario: "Your main game was supposed to launch in Q3. The lead developer says it needs 6 more months. No revenue is coming in. Monthly operating costs are PLN 3M — that's PLN 18M total over 6 months. The board must decide.",
     options: [
       {
-        letter: "A",
-        main: "Keep all 45 staff at full speed",
-        effect: "CA: −18M (cash burn)  |  CL: 0  |  NWC: −18M",
-        caChange: -18, clChange: 0,
-        cashChange: -18, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 0,
-        explanation: [
-          "PLN 18M cash paid out for 6 months of salaries and costs",
-          "Current Assets fall: less cash in the bank",
-          "No liabilities changed — this is pure cash burn",
-          "Real 11BS managed this by keeping core team, trimming contractors"
+        letter:"A", main:"Keep all 45 staff at full speed",
+        effect:"CA: −PLN 18M (cash burn)  |  CL: unchanged  |  NWC: −18M",
+        cashΔ:−18, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
+        explains:[
+          "PLN 18M cash paid out over 6 months for salaries and running costs",
+          "Current Assets fall — less cash in the bank",
+          "No liabilities changed — this is pure cash burn, nothing else",
+          "Real 11 bit studios kept core team while trimming contractors in 2022–23"
         ]
       },
       {
-        letter: "B",
-        main: "Cut 12 contractors, save PLN 6M",
-        effect: "CA: −12M (reduced burn)  |  CL: 0  |  NWC: −12M",
-        caChange: -12, clChange: 0,
-        cashChange: -12, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 0,
-        explanation: [
-          "PLN 12M cash paid — 6M saved vs Option A by cutting contractors",
-          "Shorter delay: only 3 extra months instead of 6",
-          "NWC falls less — still conservative",
-          "Closest to what 11BS actually did in 2022–2023"
+        letter:"B", main:"Cut 12 contractors, save PLN 6M total",
+        effect:"CA: −PLN 12M (reduced burn)  |  CL: unchanged  |  NWC: −12M",
+        cashΔ:−12, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
+        explains:[
+          "PLN 12M cash paid — PLN 6M saved vs Option A by cutting contractors",
+          "Only 3 extra months delay instead of 6",
+          "NWC falls less — still solidly conservative",
+          "Closest to what 11 bit studios actually did in 2022–2023"
         ]
       },
       {
-        letter: "C",
-        main: "Pause dev, cut 20 staff, save PLN 10M",
-        effect: "CA: −8M  |  CL: 0  |  NWC: −8M (but reputational risk)",
-        caChange: -8, clChange: 0,
-        cashChange: -8, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 0,
-        explanation: [
-          "Only PLN 8M cash burned — most conservative outcome",
-          "BUT: 20 staff redundancies risk losing key talent",
-          "Total delay: 9 months — misses key launch window",
-          "NWC protected short-term but long-term risk increases"
+        letter:"C", main:"Pause dev, cut 20 staff, save PLN 10M",
+        effect:"CA: −PLN 8M  |  CL: unchanged  |  NWC: −8M (reputational risk)",
+        cashΔ:−8, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
+        explains:[
+          "Only PLN 8M burned — best NWC outcome short-term",
+          "BUT: 20 redundancies risk losing key talent permanently",
+          "Total delay becomes 9 months — misses key launch window",
+          "NWC protected now; long-term development pipeline at risk"
         ]
       }
     ],
-    lesson: "Cash burn directly reduces Current Assets. No liabilities changed. NWC = CA − CL, so NWC falls 1-for-1 with cash leaving the company."
+    lesson:"Cash burn directly reduces Current Assets. No liabilities changed. NWC falls 1-for-1 with every PLN leaving the bank."
   },
   {
     title: "Pre-Orders Flood In",
-    scenario: "Despite the delay announcement, pre-orders explode. PLN 15M arrives in your bank account from excited customers who paid upfront. The money is in the bank. The Board must decide what to do with it.",
+    scenario: "Despite the delay, pre-orders explode. PLN 15M arrives in your bank account from customers who paid upfront. The money is in the bank right now. The board must decide what to do with it.",
     options: [
       {
-        letter: "A",
-        main: "Keep all cash, do nothing (safest)",
-        effect: "CA: +15M cash  |  CL: +15M deferred revenue  |  NWC: 0",
-        caChange: 15, clChange: 15,
-        cashChange: 15, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 15,
-        explanation: [
-          "PLN 15M cash arrives → Current Assets increase by 15M",
+        letter:"A", main:"Keep all cash, do nothing (safest)",
+        effect:"CA: +PLN 15M cash  |  CL: +PLN 15M deferred revenue  |  NWC: UNCHANGED",
+        cashΔ:15, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:15,
+        explains:[
+          "PLN 15M cash arrives → Current Assets increase by PLN 15M",
           "BUT under IFRS 15: money received before delivery = contract liability",
-          "Current Liabilities also increase by 15M (deferred revenue)",
-          "NWC stays exactly the same — the money is not really 'yours' yet"
+          "Current Liabilities also increase by PLN 15M — deferred revenue",
+          "NWC stays exactly the same — the money is not legally yours yet"
         ]
       },
       {
-        letter: "B",
-        main: "Spend PLN 8M on a marketing campaign",
-        effect: "CA: +7M net  |  CL: +15M deferred  |  NWC: −8M",
-        caChange: 7, clChange: 15,
-        cashChange: 7, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 15,
-        explanation: [
-          "PLN 15M in, PLN 8M immediately spent on marketing",
-          "Net CA change: +7M (15 in, 8 out)",
-          "CL still rises by 15M — deferred revenue liability stays until launch",
-          "NWC falls 8M — you spent money that technically belongs to customers"
+        letter:"B", main:"Spend PLN 8M on a marketing campaign",
+        effect:"CA: +PLN 7M net  |  CL: +PLN 15M deferred  |  NWC: −PLN 8M",
+        cashΔ:7, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:15,
+        explains:[
+          "PLN 15M in, PLN 8M immediately spent on marketing campaign",
+          "Net CA change: +7M (15 received, 8 spent). CL still +15M deferred",
+          "NWC falls PLN 8M — you spent money that belongs to customers",
+          "This is exactly what 11 bit studios avoided in 2023"
         ]
       },
       {
-        letter: "C",
-        main: "Use PLN 5M to repay short-term loan early",
-        effect: "CA: +10M net  |  CL: +10M net  |  NWC: 0",
-        caChange: 10, clChange: 10,
-        cashChange: 10, recvChange: 0, payChange: 0, loanChange: -5, accrChange: 15,
-        explanation: [
-          "PLN 15M in, PLN 5M used to clear the short-term loan",
+        letter:"C", main:"Use PLN 5M to repay short-term loan early",
+        effect:"CA: +PLN 10M net  |  CL: +PLN 10M net  |  NWC: UNCHANGED (cleaner BS)",
+        cashΔ:10, recvΔ:0, payΔ:0, loanΔ:−5, accrΔ:15,
+        explains:[
+          "PLN 15M in, PLN 5M immediately used to clear the short-term loan",
           "Net CA: +10M. Net CL: +15M deferred − 5M loan = +10M",
           "NWC unchanged BUT the loan is gone — balance sheet is cleaner",
-          "Smart move: reduce liabilities while they're manageable"
+          "Reduces future interest costs while maintaining NWC stability"
         ]
       }
     ],
-    lesson: "Pre-order cash is NOT free money. IFRS 15 records it as a contract liability until the product ships. This is exactly what happened to 11BS in 2023 — PLN 13.3M of FP2 pre-orders sat as current liabilities, compressing NWC."
+    lesson:"Pre-order cash is NOT free money. IFRS 15 records it as a contract liability until the product ships. This is exactly what happened to 11 bit studios in 2023 — PLN 13.3M of Frostpunk 2 pre-orders sat as current liabilities."
   },
   {
     title: "Published Title Flops",
-    scenario: "A game your studio published for an external developer sold only 30,000 copies — instead of the projected 350,000. You have PLN 12M of its development cost sitting on your balance sheet as an intangible asset (non-current). The Board must decide.",
+    scenario: "A game you published for an external studio sold 30,000 copies — not the 350,000 projected. You have PLN 12M of its development cost on your balance sheet as an intangible asset (non-current). The board must decide.",
     options: [
       {
-        letter: "A",
-        main: "Write it off immediately (PLN 12M charge)",
-        effect: "CA: 0  |  CL: 0  |  NWC: unchanged (but profit −12M)",
-        caChange: 0, clChange: 0,
-        cashChange: 0, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 0,
-        explanation: [
-          "Intangibles are NON-CURRENT — they do not affect NWC at all",
-          "Write-off is non-cash: no money leaves the bank",
-          "Profit collapses by PLN 12M — but NWC is completely unaffected",
-          "This is exactly what 11BS did in 2024: PLN 48.4M Project 8 write-off"
+        letter:"A", main:"Write it off immediately — take the PLN 12M charge",
+        effect:"CA: unchanged  |  CL: unchanged  |  NWC: UNCHANGED  (profit −PLN 12M)",
+        cashΔ:0, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
+        explains:[
+          "Intangible assets are NON-CURRENT — they do not affect NWC at all",
+          "Write-off is non-cash: not a single PLN leaves the bank",
+          "Profit collapses PLN 12M on the income statement — NWC is unaffected",
+          "Exactly what 11 bit did in 2024: PLN 48.4M Project 8 write-off, NWC barely moved"
         ]
       },
       {
-        letter: "B",
-        main: "Wait one quarter, hope for DLC sales",
-        effect: "CA: 0  |  CL: 0  |  NWC: unchanged (risk delayed)",
-        caChange: 0, clChange: 0,
-        cashChange: 0, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 0,
-        explanation: [
+        letter:"B", main:"Wait one quarter, hope for DLC sales",
+        effect:"CA: unchanged  |  CL: unchanged  |  NWC: UNCHANGED  (risk delayed)",
+        cashΔ:0, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
+        explains:[
           "Nothing changes on the balance sheet this quarter",
-          "NWC unaffected — but the risk remains on the books",
-          "If DLC sales don't materialise, you'll write it off anyway — just later",
-          "Delaying a write-off does not change the financial reality"
+          "NWC unaffected — but the PLN 12M risk stays on the books",
+          "If DLC sales don't materialise, you write it off anyway — just later",
+          "Delaying recognition does not change the underlying financial reality"
         ]
       },
       {
-        letter: "C",
-        main: "Sell the IP to another studio for PLN 3M cash",
-        effect: "CA: +3M cash  |  CL: 0  |  NWC: +3M",
-        caChange: 3, clChange: 0,
-        cashChange: 3, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 0,
-        explanation: [
-          "Receive PLN 3M cash — Current Assets increase by 3M",
-          "NWC improves by 3M (the only option that improves it)",
-          "Accepts a PLN 9M accounting loss (paid 12M, sold for 3M)",
-          "Converts a non-current write-off risk into current cash"
+        letter:"C", main:"Sell the IP to another studio for PLN 3M cash",
+        effect:"CA: +PLN 3M cash  |  CL: unchanged  |  NWC: +PLN 3M",
+        cashΔ:3, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
+        explains:[
+          "Receive PLN 3M cash — Current Assets increase by PLN 3M",
+          "NWC improves by PLN 3M — only option here that actually improves it",
+          "Accept a PLN 9M accounting loss (paid 12M, sold for 3M)",
+          "Converts a non-current write-off risk into current liquid cash"
         ]
       }
     ],
-    lesson: "Write-offs hit the income statement (profit) but not NWC — because intangibles are non-current assets. NWC and profit can move in completely different directions. This is one of NWC's most important limitations."
+    lesson:"Write-offs hit the income statement (profit) but NOT NWC — because intangibles are non-current assets. NWC and profit can move in completely different directions. This is one of NWC's most important limitations."
   },
   {
-    title: "The Game Launches — Board Decision",
-    scenario: "Your game launches and it's a huge hit. PLN 50M in cash arrives over 3 months. The PLN 15M pre-order deferred revenue automatically clears — those contract liabilities become recognised revenue. NWC jumps. Now the Board must decide what to do with the strong position.",
-    autoUpdate: { caChange: 50, clChange: -15, cashChange: 50, accrChange: -15 },
+    title: "The Launch — Final Board Decision",
+    scenario: "Your game launches and it's a hit. PLN 50M in cash arrives. The pre-order deferred revenue clears automatically — removing PLN 15M from current liabilities. NWC jumps. The board must now decide what to do with the strong position.",
+    autoApply: { cashΔ:50, accrΔ:−15 },
     options: [
       {
-        letter: "A",
-        main: "Acquire a smaller studio for PLN 30M cash",
-        effect: "CA: −30M  |  CL: 0  |  NWC: −30M (non-current asset acquired)",
-        caChange: -30, clChange: 0,
-        cashChange: -30, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 0,
-        explanation: [
-          "PLN 30M cash paid — becomes a non-current asset (investment)",
-          "Current Assets fall significantly, NWC drops",
-          "Aggressive use of the cash buffer — bets on future synergies",
-          "CD Projekt has done this; 11BS has been more cautious historically"
+        letter:"A", main:"Acquire a smaller studio for PLN 30M cash",
+        effect:"CA: −PLN 30M  |  CL: unchanged  |  NWC: −PLN 30M",
+        cashΔ:−30, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
+        explains:[
+          "PLN 30M cash paid out — becomes a non-current investment asset",
+          "Current Assets fall significantly, NWC drops by PLN 30M",
+          "Aggressive use of the cash buffer — bets on future growth synergies",
+          "CD Projekt has done similar acquisitions; 11 bit has been more cautious"
         ]
       },
       {
-        letter: "B",
-        main: "Pay PLN 20M dividend to shareholders",
-        effect: "CA: −20M  |  CL: 0  |  NWC: −20M",
-        caChange: -20, clChange: 0,
-        cashChange: -20, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 0,
-        explanation: [
+        letter:"B", main:"Pay PLN 20M dividend to shareholders",
+        effect:"CA: −PLN 20M  |  CL: unchanged  |  NWC: −PLN 20M",
+        cashΔ:−20, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
+        explains:[
           "PLN 20M cash leaves the company — returns value to shareholders",
-          "NWC drops by 20M — reduces the conservative buffer",
-          "Not a bad decision — but reduces financial flexibility",
-          "11BS has historically retained cash rather than paying dividends"
+          "NWC drops PLN 20M — reduces the conservative buffer",
+          "Not a wrong decision — but reduces financial flexibility going forward",
+          "11 bit has historically retained cash rather than paying dividends"
         ]
       },
       {
-        letter: "C",
-        main: "Keep all cash, start next game development",
-        effect: "CA: 0 additional change  |  CL: 0  |  NWC: stays high",
-        caChange: 0, clChange: 0,
-        cashChange: 0, recvChange: 0, payChange: 0, loanChange: 0, accrChange: 0,
-        explanation: [
-          "Retain all cash — no additional NWC change this round",
-          "Start self-funding next development cycle immediately",
-          "Maximally conservative: NWC stays at peak",
-          "This is exactly what 11BS and CD Projekt both chose historically — the war chest approach"
+        letter:"C", main:"Keep all cash, start next game development",
+        effect:"CA: no additional change  |  CL: unchanged  |  NWC: stays high",
+        cashΔ:0, recvΔ:0, payΔ:0, loanΔ:0, accrΔ:0,
+        explains:[
+          "Retain all cash — no additional NWC change beyond the launch inflow",
+          "Start self-funding the next development cycle immediately",
+          "Maximally conservative: NWC remains at its peak",
+          "This is exactly what both 11 bit studios and CD Projekt chose — the war chest approach"
         ]
       }
     ],
-    lesson: "Conservative NWC has an opportunity cost — cash sitting idle vs deployed for growth. 11BS and CDR both chose to retain cash, making NWC a strategic reserve rather than a working tool."
+    lesson:"Conservative NWC has an opportunity cost — cash sitting idle vs deployed for growth. Both 11BS and CDR chose to retain cash. Same policy, different scale, same underlying logic."
   }
 ];
 
-// ── STATE ──────────────────────────────────────────────────────────────────
-let isHost = false;
-let playerName = "";
-let playerId = "";
-let currentRound = -1; // -1=lobby, -2=demo
-let revealed = false;
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let _db          = null;
+let _liveState   = null;
+let pollTimer    = null;
 
-// NWC tracker
-let bs = { cash: 60, recv: 25, pay: 8, loan: 5, accr: 7 };
-const nwcHistory = [65];
+let myName       = '';
+let isHost       = false;
+let playerId     = '';
+let myVote       = -1;
+let lastRound    = -1;
+let lastRestartToken = null;
 
-function calcCA() { return bs.cash + bs.recv; }
-function calcCL() { return bs.pay + bs.loan + bs.accr; }
+let bs = { cash:60, recv:25, pay:8, loan:5, accr:7 };
+let nwcHistory   = [65];
+let nwcChart     = null;
+
+function calcCA()  { return bs.cash + bs.recv; }
+function calcCL()  { return bs.pay + bs.loan + Math.max(0, bs.accr); }
 function calcNWC() { return calcCA() - calcCL(); }
-function getPolicy(nwc) {
+
+function polClass(nwc) {
   if (nwc >= 50) return "conservative";
   if (nwc >= 25) return "watch";
   if (nwc >= 0)  return "caution";
   return "danger";
 }
-function getPolicyLabel(nwc) {
+function polLabel(nwc) {
   if (nwc >= 50) return "Conservative";
   if (nwc >= 25) return "Watch";
   if (nwc >= 0)  return "Caution";
   return "Aggressive";
 }
 
-// ── INIT ───────────────────────────────────────────────────────────────────
-window.onload = () => {
-  const url = window.location.href.split("?")[0];
-  const params = new URLSearchParams(window.location.search);
+// ═══════════════════════════════════════════════════════
+// FIREBASE
+// ═══════════════════════════════════════════════════════
+function initFirebase() {
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    _db = firebase.database();
+    _db.ref(ROOT + '/state').on('value', snap => { _liveState = snap.val(); });
+  } catch(e) { console.error('Firebase:', e); }
+}
 
-  if (params.get("host") === "3123") {
-    isHost = true;
-    initHost();
-  } else {
-    initStudent();
+async function loadState() {
+  if (!_db) return null;
+  const snap = await _db.ref(ROOT + '/state').once('value');
+  return snap.val();
+}
+async function saveState(st) {
+  if (!_db) return;
+  await _db.ref(ROOT + '/state').set(st);
+}
+function freshState() {
+  return { phase:'lobby', round:0, votes:{}, revealed:false,
+           players:{}, bs:{...bs}, choices:[], currentNWC:65,
+           nwcHistory:[65], restartToken:null };
+}
+
+// ═══════════════════════════════════════════════════════
+// AUTO-REJOIN ON REFRESH
+// ═══════════════════════════════════════════════════════
+window.addEventListener('load', async () => {
+  initFirebase();
+  await new Promise(r => setTimeout(r, 700));
+
+  const init = await loadState();
+  if (init) lastRestartToken = init.restartToken || null;
+
+  // Host rejoin
+  if (localStorage.getItem('nwc_host') === '1') {
+    isHost = true; myName = '__host__';
+    let state = await loadState();
+    if (!state) { state = freshState(); await saveState(state); }
+    showScreen('host-screen');
+    restoreHostView(state);
+    startPolling();
+    return;
   }
-};
 
-// ── HOST ───────────────────────────────────────────────────────────────────
-function initHost() {
-  show("host-view");
-  const url = window.location.href.split("?")[0];
-  document.getElementById("lobby-url").textContent = url;
-
-  // Watch players
-  onValue(ref(db, `${ROOT}/players`), snap => {
-    const players = snap.val() || {};
-    const list = Object.values(players);
-    const chip = document.getElementById("player-count-chip");
-    chip.textContent = `${list.length} director${list.length !== 1 ? "s" : ""}`;
-    const grid = document.getElementById("players-grid");
-    grid.innerHTML = list.map(p => `<div class="player-chip">👤 ${p.name}</div>`).join("");
-    document.getElementById("votes-total").textContent = list.length;
-  });
-
-  // Watch game state
-  onValue(ref(db, `${ROOT}/state`), snap => {
-    const state = snap.val();
+  // Student rejoin
+  const savedName = localStorage.getItem('nwc_name');
+  const savedId   = localStorage.getItem('nwc_id');
+  if (savedName && savedId) {
+    myName = savedName; playerId = savedId;
+    let state = await loadState();
     if (!state) return;
 
-    // sync bs
-    if (state.bs) {
-      bs = state.bs;
-      updateBSDisplay();
+    // Re-register if missing
+    if (!state.players) state.players = {};
+    if (!state.players[playerId]) {
+      state.players[playerId] = { name: myName, joined: Date.now() };
+      await saveState(state);
     }
 
-    updateDots(state.round);
-
-    if (state.phase === "lobby") {
-      showHostSection("host-lobby");
-    } else if (state.phase === "demo") {
-      showHostSection("host-demo");
-      document.getElementById("phase-chip").textContent = "Demo";
-    } else if (state.phase === "round") {
-      showHostSection("host-round");
-      currentRound = state.round;
-      revealed = state.revealed || false;
-      setupRoundHost(state.round, state.votes || {}, state.revealed || false);
-      document.getElementById("phase-chip").textContent = `Round ${state.round + 1} / 4`;
-    } else if (state.phase === "summary") {
-      showHostSection("host-summary");
-      buildSummary(state.choices || []);
+    if (state.phase === 'lobby' || state.phase === 'demo') {
+      showScreen('waiting-screen');
+      renderWaiting(state);
+    } else if (state.phase === 'round') {
+      const existingVote = state.votes && state.votes[playerId];
+      if (existingVote !== undefined) myVote = existingVote;
+      if (state.revealed) { showStudentResult(state); }
+      else { showScreen('vote-screen'); renderVoteScreen(state); }
+    } else if (state.phase === 'summary') {
+      showStudentResult(state);
     }
-  });
+    startPolling();
+  }
+});
 
-  // Init state if none
-  get(ref(db, `${ROOT}/state`)).then(snap => {
-    if (!snap.exists()) {
-      set(ref(db, `${ROOT}/state`), { phase: "lobby", round: 0, votes: {}, revealed: false, bs, choices: [] });
-    }
-  });
+// ═══════════════════════════════════════════════════════
+// JOIN / HOST LOGIN
+// ═══════════════════════════════════════════════════════
+function toggleHostSection() {
+  document.getElementById('host-section').classList.toggle('hidden');
 }
 
-function showHostSection(id) {
-  ["host-lobby","host-demo","host-round","host-summary"].forEach(s => {
-    document.getElementById(s).classList.toggle("hidden", s !== id);
-  });
-}
+async function joinGame() {
+  const name = document.getElementById('player-name-input').value.trim();
+  if (!name) { showToast('Please enter your name', 'error'); return; }
 
-function setupRoundHost(roundIdx, votes, revealed) {
-  const round = ROUNDS[roundIdx];
-  document.getElementById("h-round-num").textContent = `Round ${roundIdx + 1} of 4`;
-  document.getElementById("h-round-title").textContent = round.title;
-  document.getElementById("h-scenario-text").textContent = round.scenario;
+  myName  = name;
+  playerId = 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  localStorage.setItem('nwc_name', myName);
+  localStorage.setItem('nwc_id',   playerId);
+  localStorage.removeItem('nwc_host');
 
-  // Vote bars
-  const barsEl = document.getElementById("h-vote-bars");
-  const totals = [0, 0, 0];
-  Object.values(votes).forEach(v => { if (v >= 0 && v <= 2) totals[v]++; });
-  const totalVotes = totals.reduce((a, b) => a + b, 0);
-  document.getElementById("votes-in").textContent = totalVotes;
+  let state = await loadState();
+  if (!state) { state = freshState(); }
 
-  barsEl.innerHTML = round.options.map((opt, i) => `
-    <div class="vote-bar-row">
-      <div class="vote-bar-letter">${opt.letter}</div>
-      <div class="vote-bar-track">
-        <div class="vote-bar-fill option-${i}" style="width:${totalVotes ? (totals[i]/totalVotes*100) : 0}%">
-          <span class="vote-bar-label">${revealed ? opt.main : (totalVotes > 0 ? opt.main : "Waiting for votes...")}</span>
-        </div>
-      </div>
-      <div class="vote-bar-count">${totals[i]}</div>
-    </div>
-  `).join("");
+  if (!state.players) state.players = {};
+  state.players[playerId] = { name: myName, joined: Date.now() };
+  await saveState(state);
 
-  // Reveal button
-  const revBtn = document.getElementById("reveal-btn");
-  const nextBtn = document.getElementById("next-btn");
-  const sumBtn = document.getElementById("summary-btn");
-
-  revBtn.style.display = revealed ? "none" : "";
-  revBtn.disabled = totalVotes === 0;
-  nextBtn.style.display = (revealed && roundIdx < ROUNDS.length - 1) ? "" : "none";
-  sumBtn.style.display = (revealed && roundIdx === ROUNDS.length - 1) ? "" : "none";
-
-  if (revealed) {
-    const winner = getWinner(votes);
-    showWinnerHost(round, winner);
+  if (state.phase === 'round') {
+    myVote = -1;
+    showScreen('vote-screen');
+    renderVoteScreen(state);
   } else {
-    document.getElementById("winner-wrap").innerHTML = "";
-    document.getElementById("explanation-wrap").innerHTML = "";
+    showScreen('waiting-screen');
+    renderWaiting(state);
+  }
+  startPolling();
+}
+
+async function joinAsHost() {
+  const pin = document.getElementById('host-pin-input').value.trim();
+  if (pin !== HOST_PIN) { showToast('Wrong PIN', 'error'); return; }
+
+  isHost = true; myName = '__host__';
+  localStorage.setItem('nwc_host', '1');
+  localStorage.removeItem('nwc_name');
+  localStorage.removeItem('nwc_id');
+
+  let state = await loadState();
+  if (!state) { state = freshState(); await saveState(state); }
+
+  showScreen('host-screen');
+  restoreHostView(state);
+  startPolling();
+}
+
+// ═══════════════════════════════════════════════════════
+// HOST ACTIONS
+// ═══════════════════════════════════════════════════════
+function restoreHostView(state) {
+  hideAllSections();
+  updateHeaderBtns(state);
+  if (state.phase === 'lobby') {
+    document.getElementById('host-lobby').classList.remove('hidden');
+    renderLobby(state);
+    document.getElementById('host-status-label').textContent = 'Lobby open';
+  } else if (state.phase === 'demo') {
+    document.getElementById('host-demo').classList.remove('hidden');
+    document.getElementById('host-status-label').textContent = 'Demo Round';
+  } else if (state.phase === 'round') {
+    document.getElementById('host-round').classList.remove('hidden');
+    if (state.bs) bs = state.bs;
+    if (state.nwcHistory) nwcHistory = state.nwcHistory;
+    renderRoundHost(state);
+    document.getElementById('host-status-label').textContent = `Round ${state.round + 1} of 4`;
+  } else if (state.phase === 'summary') {
+    document.getElementById('host-summary').classList.remove('hidden');
+    if (state.nwcHistory) nwcHistory = state.nwcHistory;
+    buildSummary(state);
+    document.getElementById('host-status-label').textContent = 'Session Complete';
   }
 }
 
-function getWinner(votes) {
-  const totals = [0, 0, 0];
-  Object.values(votes).forEach(v => { if (v >= 0 && v <= 2) totals[v]++; });
-  return totals.indexOf(Math.max(...totals));
+function hideAllSections() {
+  ['host-lobby','host-demo','host-round','host-summary'].forEach(id =>
+    document.getElementById(id).classList.add('hidden'));
 }
 
-function showWinnerHost(round, winner) {
-  const opt = round.options[winner];
-  document.getElementById("winner-wrap").innerHTML = `
-    <div class="winner-banner animate-in">
-      <div class="winner-letter">${opt.letter}</div>
-      <div class="winner-content">
-        <div class="winner-label">Board Decision</div>
-        <div class="winner-text">${opt.main}</div>
-        <div class="winner-effect">${opt.effect}</div>
-      </div>
-    </div>`;
+function updateHeaderBtns(state) {
+  const phase = state ? state.phase : 'lobby';
+  const ri    = state ? state.round : 0;
+  const rev   = state ? state.revealed : false;
 
-  document.getElementById("explanation-wrap").innerHTML = `
-    <div class="explanation-box animate-in">
-      <div class="ex-title">What Changed & Why</div>
-      <div class="ex-rows">
-        ${opt.explanation.map(e => `<div class="ex-row"><span class="ex-arrow">→</span><span class="ex-text">${e}</span></div>`).join("")}
-      </div>
-    </div>`;
+  setBtn('btn-start',   phase === 'lobby');
+  setBtn('btn-reveal',  phase === 'round' && !rev);
+  setBtn('btn-next',    phase === 'round' && rev && ri < ROUNDS.length - 1);
+  setBtn('btn-summary', phase === 'round' && rev && ri === ROUNDS.length - 1);
+
+  // In-ctrl-bar buttons
+  const hRev = document.getElementById('h-reveal-btn');
+  const hNxt = document.getElementById('h-next-btn');
+  const hSum = document.getElementById('h-summary-btn');
+  if (hRev) { hRev.classList.toggle('hidden', phase !== 'round' || rev); hRev.disabled = false; }
+  if (hNxt) hNxt.classList.toggle('hidden', !(phase === 'round' && rev && ri < ROUNDS.length - 1));
+  if (hSum) hSum.classList.toggle('hidden', !(phase === 'round' && rev && ri === ROUNDS.length - 1));
 }
 
-function updateBSDisplay() {
-  const ca = calcCA(), cl = calcCL(), nwc = calcNWC();
-  const policy = getPolicy(nwc);
-  const pLabel = getPolicyLabel(nwc);
-
-  document.getElementById("bs-cash").textContent = `PLN ${bs.cash}M`;
-  document.getElementById("bs-recv").textContent = `PLN ${bs.recv}M`;
-  document.getElementById("bs-ca").textContent   = `PLN ${ca}M`;
-  document.getElementById("bs-pay").textContent  = `PLN ${bs.pay}M`;
-  document.getElementById("bs-loan").textContent = `PLN ${bs.loan}M`;
-  document.getElementById("bs-accr").textContent = `PLN ${bs.accr}M`;
-  document.getElementById("bs-cl").textContent   = `PLN ${cl}M`;
-
-  const nwcEl = document.getElementById("nwc-display");
-  nwcEl.textContent = `PLN ${nwc}M`;
-  nwcEl.className = `nwc-big-value ${policy}`;
-
-  const polEl = document.getElementById("policy-display");
-  polEl.textContent = pLabel;
-  polEl.className = `policy-pill ${policy}`;
+function setBtn(id, visible) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('hidden', !visible);
 }
 
-function updateDots(round) {
+async function hostStart() {
+  const players = await getPlayerCount();
+  if (players === 0) { showToast('No board members joined yet!', 'error'); return; }
+  let state = await loadState();
+  state.phase = 'demo';
+  await saveState(state);
+  hideAllSections();
+  document.getElementById('host-demo').classList.remove('hidden');
+  document.getElementById('host-status-label').textContent = 'Demo Round';
+  updateHeaderBtns(state);
+}
+
+async function hostStartRound(idx) {
+  let state = await loadState();
+  state.phase   = 'round';
+  state.round   = idx;
+  state.votes   = {};
+  state.revealed= false;
+  if (state.bs) bs = state.bs;
+  await saveState(state);
+  hideAllSections();
+  document.getElementById('host-round').classList.remove('hidden');
+  document.getElementById('host-status-label').textContent = `Round ${idx + 1} of 4`;
+  updateHeaderBtns(state);
+  renderRoundHost(state);
+}
+
+async function hostReveal() {
+  let state = await loadState();
+  const votes  = state.votes || {};
+  const winner = getWinner(votes);
+  const round  = ROUNDS[state.round];
+  const opt    = round.options[winner];
+
+  // Apply round 4 auto-update first
+  if (round.autoApply) {
+    bs.cash = (bs.cash || 0) + round.autoApply.cashΔ;
+    bs.accr = (bs.accr || 0) + round.autoApply.accrΔ;
+  }
+
+  // Apply winner
+  bs.cash = Math.max(0, (bs.cash || 0) + opt.cashΔ);
+  bs.recv = Math.max(0, (bs.recv || 0) + opt.recvΔ);
+  bs.pay  = Math.max(0, (bs.pay  || 0) + opt.payΔ);
+  bs.loan = Math.max(0, (bs.loan || 0) + opt.loanΔ);
+  bs.accr = (bs.accr || 0) + opt.accrΔ;
+
+  const nwc = calcNWC();
+  nwcHistory.push(nwc);
+
+  const choices = state.choices || [];
+  choices.push(winner);
+
+  state.bs         = { ...bs };
+  state.revealed   = true;
+  state.choices    = choices;
+  state.currentNWC = nwc;
+  state.nwcHistory = [...nwcHistory];
+  await saveState(state);
+  renderRoundHost(state);
+  updateHeaderBtns(state);
+}
+
+async function hostNextRound() {
+  let state = await loadState();
+  const next = state.round + 1;
+  if (next >= ROUNDS.length) return;
+  state.round   = next;
+  state.phase   = 'round';
+  state.votes   = {};
+  state.revealed= false;
+  await saveState(state);
+  document.getElementById('nwc-change-tag').classList.add('hidden');
+  hideAllSections();
+  document.getElementById('host-round').classList.remove('hidden');
+  document.getElementById('host-status-label').textContent = `Round ${next + 1} of 4`;
+  updateHeaderBtns(state);
+  renderRoundHost(state);
+}
+
+async function hostShowSummary() {
+  let state = await loadState();
+  state.phase = 'summary';
+  await saveState(state);
+  hideAllSections();
+  document.getElementById('host-summary').classList.remove('hidden');
+  document.getElementById('host-status-label').textContent = 'Session Complete';
+  updateHeaderBtns(state);
+  buildSummary(state);
+}
+
+async function hostRestart() {
+  if (!confirm('Restart the session? All data cleared, everyone back to join screen.')) return;
+  bs = { cash:60, recv:25, pay:8, loan:5, accr:7 };
+  nwcHistory = [65];
+  if (nwcChart) { nwcChart.destroy(); nwcChart = null; }
+  const fresh = freshState();
+  fresh.restartToken = Date.now();
+  await saveState(fresh);
+  hideAllSections();
+  document.getElementById('host-lobby').classList.remove('hidden');
+  document.getElementById('lobby-count').textContent = '0';
+  document.getElementById('host-players-grid').innerHTML = '';
+  document.getElementById('host-status-label').textContent = 'Lobby open';
+  updateHeaderBtns(fresh);
+  showToast('Session restarted', 'success');
+}
+
+async function getPlayerCount() {
+  const state = await loadState();
+  return state && state.players ? Object.keys(state.players).length : 0;
+}
+
+// ═══════════════════════════════════════════════════════
+// HOST RENDER
+// ═══════════════════════════════════════════════════════
+function renderLobby(state) {
+  const players = Object.values(state.players || {});
+  document.getElementById('lobby-count').textContent = players.length;
+  document.getElementById('host-players-grid').innerHTML =
+    players.map(p => `<div class="player-chip"><div class="player-dot"></div>${p.name}</div>`).join('');
+  document.getElementById('host-status-label').textContent =
+    `${players.length} board member${players.length !== 1 ? 's' : ''} connected`;
+}
+
+function renderRoundHost(state) {
+  const ri    = state.round;
+  const round = ROUNDS[ri];
+  const votes = state.votes || {};
+
+  // Badges + text
+  document.getElementById('h-round-badge').textContent = `Round ${ri + 1} of 4`;
+  document.getElementById('h-round-title').textContent  = round.title;
+  document.getElementById('h-scenario-text').textContent = round.scenario;
+
+  // Progress dots
   for (let i = 0; i < 4; i++) {
-    const d1 = document.getElementById(`dot-${i}`);
-    const d2 = document.getElementById(`ctrl-dot-${i}`);
-    const cls = i < round ? "done" : i === round ? "active" : "";
-    if (d1) { d1.className = "dot " + cls; }
-    if (d2) { d2.className = "dot " + cls; }
+    const d = document.getElementById('pd' + i);
+    if (d) d.className = 'dot' + (i < ri ? ' done' : i === ri ? ' active' : '');
+  }
+
+  // Vote counts
+  const totals = [0,0,0];
+  Object.values(votes).forEach(v => { if (v >= 0 && v <= 2) totals[v]++; });
+  const total = totals.reduce((a,b) => a+b, 0);
+  const playerCount = Object.keys(state.players || {}).length;
+  document.getElementById('votes-in').textContent    = total;
+  document.getElementById('votes-total').textContent = playerCount;
+
+  // Vote bars — always show full text
+  document.getElementById('h-vote-bars').innerHTML = round.options.map((opt, i) => {
+    const pct = total ? Math.round(totals[i]/total*100) : 0;
+    return `
+      <div class="vb-row">
+        <div class="vb-letter">${opt.letter}</div>
+        <div class="vb-track">
+          <div class="vb-fill opt${i}" style="width:${pct}%"></div>
+          <div class="vb-text-overlay">
+            <div class="vb-opt-main">${opt.main}</div>
+            <div class="vb-opt-effect">${opt.effect}</div>
+          </div>
+          <div class="vb-pct">${pct}%</div>
+        </div>
+        <div class="vb-count">${totals[i]}</div>
+      </div>`;
+  }).join('');
+
+  // Ctrl bar buttons
+  const hRev = document.getElementById('h-reveal-btn');
+  const hNxt = document.getElementById('h-next-btn');
+  const hSum = document.getElementById('h-summary-btn');
+  if (hRev) { hRev.classList.toggle('hidden', state.revealed); hRev.disabled = total === 0 && !state.revealed; }
+  if (hNxt) hNxt.classList.toggle('hidden', !(state.revealed && ri < ROUNDS.length - 1));
+  if (hSum) hSum.classList.toggle('hidden', !(state.revealed && ri === ROUNDS.length - 1));
+
+  // Winner + explanation
+  if (state.revealed) {
+    const winner = getWinner(votes);
+    const opt = round.options[winner];
+    document.getElementById('h-winner-wrap').innerHTML = `
+      <div class="winner-banner">
+        <div class="winner-letter">${opt.letter}</div>
+        <div>
+          <div class="winner-label">Board Decision — ${totals[winner]} votes (${total ? Math.round(totals[winner]/total*100) : 0}%)</div>
+          <div class="winner-main">${opt.main}</div>
+          <div class="winner-effect">${opt.effect}</div>
+        </div>
+      </div>`;
+    document.getElementById('h-explain-wrap').innerHTML = `
+      <div class="explain-box">
+        <div class="explain-title">What Changed & Why</div>
+        ${opt.explains.map(e => `<div class="explain-row"><span class="explain-arrow">→</span><span class="explain-text">${e}</span></div>`).join('')}
+        <div class="explain-lesson">${round.lesson}</div>
+      </div>`;
+    updateNWCPanel(state.currentNWC, state.bs, nwcHistory);
+  } else {
+    document.getElementById('h-winner-wrap').innerHTML = '';
+    document.getElementById('h-explain-wrap').innerHTML = '';
+    if (state.bs) updateNWCPanel(state.currentNWC || 65, state.bs, state.nwcHistory || nwcHistory);
   }
 }
 
-// Host actions
-window.startDemo = () => {
-  update(ref(db, `${ROOT}/state`), { phase: "demo" });
-};
-
-window.startRound = (idx) => {
-  update(ref(db, `${ROOT}/state`), {
-    phase: "round", round: idx, votes: {}, revealed: false
-  });
-};
-
-window.revealResults = () => {
-  get(ref(db, `${ROOT}/state`)).then(snap => {
-    const state = snap.val();
-    const votes = state.votes || {};
-    const winner = getWinner(votes);
-    const round = ROUNDS[currentRound];
-    const opt = round.options[winner];
-
-    // Apply auto-update for round 4 first
-    if (round.autoUpdate) {
-      bs.cash += round.autoUpdate.cashChange;
-      bs.accr += round.autoUpdate.accrChange;
-    }
-
-    // Apply winner changes
-    bs.cash += opt.cashChange;
-    bs.recv += opt.recvChange;
-    bs.pay  += opt.payChange;
-    bs.loan += opt.loanChange;
-    bs.accr += opt.accrChange;
-
-    // Clamp negatives
-    Object.keys(bs).forEach(k => { if (bs[k] < 0) bs[k] = 0; });
-
-    const nwc = calcNWC();
-    nwcHistory.push(nwc);
-
-    // Save
-    const choices = state.choices || [];
-    choices.push(winner);
-
-    update(ref(db, `${ROOT}/state`), {
-      revealed: true, bs, choices,
-      currentNWC: nwc
-    });
-
-    // Flash changes
-    ["bs-ca","bs-cl","nwc-display"].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) { el.classList.add("changed"); setTimeout(() => el.classList.remove("changed"), 1500); }
-    });
-
-    const tag = document.getElementById("nwc-change");
-    const prev = nwcHistory[nwcHistory.length - 2] || 65;
-    const diff = nwc - prev;
-    if (tag) {
-      tag.style.display = "block";
-      if (diff < 0) { tag.className = "nwc-change-tag negative"; tag.textContent = `▼ ${diff}M from previous`; }
-      else if (diff > 0) { tag.className = "nwc-change-tag positive"; tag.textContent = `▲ +${diff}M from previous`; }
-      else { tag.className = "nwc-change-tag neutral"; tag.textContent = "↔ No change to NWC"; }
-    }
-  });
-};
-
-window.nextRound = () => {
-  const next = currentRound + 1;
-  if (next < ROUNDS.length) {
-    update(ref(db, `${ROOT}/state`), {
-      phase: "round", round: next, votes: {}, revealed: false
-    });
-    const tag = document.getElementById("nwc-change");
-    if (tag) tag.style.display = "none";
+function updateNWCPanel(nwc, bsData, hist) {
+  if (bsData) {
+    document.getElementById('bs-cash').textContent = `PLN ${bsData.cash}M`;
+    document.getElementById('bs-recv').textContent = `PLN ${bsData.recv}M`;
+    document.getElementById('bs-other').textContent = `PLN 0M`;
+    document.getElementById('bs-pay').textContent   = `PLN ${bsData.pay}M`;
+    document.getElementById('bs-loan').textContent  = `PLN ${bsData.loan}M`;
+    document.getElementById('bs-accr').textContent  = `PLN ${Math.max(0,bsData.accr)}M`;
+    const ca = bsData.cash + bsData.recv;
+    const cl = bsData.pay + bsData.loan + Math.max(0, bsData.accr);
+    document.getElementById('bs-ca').textContent = `PLN ${ca}M`;
+    document.getElementById('bs-cl').textContent = `PLN ${cl}M`;
   }
-};
 
-window.showSummary = () => {
-  update(ref(db, `${ROOT}/state`), { phase: "summary" });
-};
+  const pol = polClass(nwc);
+  const numEl = document.getElementById('nwc-num');
+  numEl.textContent = `PLN ${nwc}M`;
+  numEl.className = `nwc-num ${pol}`;
+  numEl.classList.add('flash'); setTimeout(() => numEl.classList.remove('flash'), 700);
 
-function buildSummary(choices) {
-  const maxNWC = Math.max(...nwcHistory);
+  const pillEl = document.getElementById('policy-pill');
+  pillEl.textContent = polLabel(nwc);
+  pillEl.className = `policy-pill ${pol}`;
+
+  // Change tag
+  const h = hist || nwcHistory;
+  const prev = h.length >= 2 ? h[h.length - 2] : 65;
+  const diff = nwc - prev;
+  const tag  = document.getElementById('nwc-change-tag');
+  tag.classList.remove('hidden');
+  if (diff < 0) { tag.className = 'nwc-change neg'; tag.textContent = `▼ ${diff}M from previous`; }
+  else if (diff > 0) { tag.className = 'nwc-change pos'; tag.textContent = `▲ +${diff}M from previous`; }
+  else { tag.className = 'nwc-change neu'; tag.textContent = '↔ NWC unchanged'; }
+
+  // Flash BS values
+  ['bs-ca','bs-cl'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+  });
+
+  updateChart(hist || nwcHistory);
+}
+
+function updateChart(hist) {
+  const labels = hist.map((_, i) => i === 0 ? 'Start' : `R${i}`);
+  const colors = hist.map(v => v >= 50 ? '#34d399' : v >= 25 ? '#f59e0b' : v >= 0 ? '#f97316' : '#ef4444');
+  const ctx = document.getElementById('nwc-chart').getContext('2d');
+
+  if (nwcChart) {
+    nwcChart.data.labels = labels;
+    nwcChart.data.datasets[0].data = hist;
+    nwcChart.data.datasets[0].pointBackgroundColor = colors;
+    nwcChart.data.datasets[0].borderColor = colors[colors.length - 1];
+    nwcChart.update('active');
+  } else {
+    nwcChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          data: hist,
+          borderColor: colors[colors.length - 1],
+          backgroundColor: 'rgba(52,211,153,0.06)',
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointBackgroundColor: colors,
+          tension: 0.3, fill: true,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        animation: { duration: 800, easing: 'easeInOutQuart' },
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks:{ color:'#64748b', font:{size:10} }, grid:{ color:'rgba(255,255,255,0.04)' } },
+          y: { ticks:{ color:'#64748b', font:{size:10}, callback: v => v + 'M' }, grid:{ color:'rgba(255,255,255,0.04)' } }
+        }
+      }
+    });
+  }
+}
+
+function buildSummary(state) {
+  const choices = state.choices || [];
+  const hist    = state.nwcHistory || nwcHistory;
+  const maxH    = Math.max(...hist, 1);
+  const polColors = { conservative:'#34d399', watch:'#f59e0b', caution:'#f97316', danger:'#ef4444' };
 
   // Journey bars
-  const barsEl = document.getElementById("journey-bars");
-  const labels = ["Start", "Round 1", "Round 2", "Round 3", "Round 4"];
-  barsEl.innerHTML = nwcHistory.map((val, i) => {
-    const h = Math.max(8, (val / maxNWC) * 110);
-    const color = getPolicy(val);
-    const colors = { conservative:"var(--sage)", watch:"var(--gold)", caution:"var(--amber)", danger:"var(--danger)" };
-    return `<div class="journey-bar-wrap">
-      <div class="journey-bar-val">PLN ${val}M</div>
-      <div class="journey-bar" style="height:${h}px; background:${colors[color]};"></div>
-      <div class="journey-bar-lbl">${labels[i]}</div>
+  const barLabels = ['Start','Round 1','Round 2','Round 3','Round 4'];
+  document.getElementById('journey-bars').innerHTML = hist.map((v, i) => {
+    const h = Math.max(6, (v / maxH) * 120);
+    const c = polColors[polClass(v)];
+    return `<div class="jb-col">
+      <div class="jb-val">PLN ${v}M</div>
+      <div class="jb-bar" style="height:${h}px;background:${c}"></div>
+      <div class="jb-lbl">${barLabels[i] || 'R'+i}</div>
     </div>`;
-  }).join("");
+  }).join('');
 
   // Lesson cards
-  const lessonEl = document.getElementById("lesson-cards");
-  lessonEl.innerHTML = ROUNDS.map((r, i) => {
-    const chosen = choices[i] !== undefined ? r.options[choices[i]] : null;
-    const nwcAfter = nwcHistory[i + 1] || "—";
-    const diff = nwcHistory[i+1] !== undefined ? nwcHistory[i+1] - nwcHistory[i] : 0;
-    const sign = diff > 0 ? "+" : "";
+  document.getElementById('lesson-cards').innerHTML = ROUNDS.map((r, i) => {
+    const opt   = choices[i] !== undefined ? r.options[choices[i]] : null;
+    const after = hist[i+1] !== undefined ? hist[i+1] : '—';
+    const diff  = hist[i+1] !== undefined ? hist[i+1] - hist[i] : 0;
+    const sign  = diff > 0 ? '+' : '';
     return `<div class="lesson-card">
       <div class="lesson-round">Round ${i+1}</div>
       <div class="lesson-heading">${r.title}</div>
-      <div class="lesson-nwc">PLN ${nwcAfter}M (${sign}${diff}M)</div>
-      <div class="lesson-text">${chosen ? "Board chose: <strong>" + chosen.letter + " — " + chosen.main + "</strong><br>" : ""}${r.lesson}</div>
+      <div class="lesson-nwc">PLN ${after}M (${sign}${diff}M)</div>
+      <div class="lesson-text">${opt ? `Board chose <strong>${opt.letter}</strong><br>` : ''}${r.lesson}</div>
     </div>`;
-  }).join("");
+  }).join('');
 
-  // Compare
-  const finalNWC = nwcHistory[nwcHistory.length - 1];
-  const pol = getPolicyLabel(finalNWC);
-  document.getElementById("compare-row").innerHTML = `
+  // Comparison
+  const finalNWC = hist[hist.length - 1];
+  document.getElementById('compare-cards').innerHTML = `
     <div class="compare-card">
       <div class="compare-company">Your Board — Frostgate</div>
-      <div class="compare-nwc your">PLN ${finalNWC}M</div>
-      <div class="compare-policy">${pol} Policy</div>
+      <div class="compare-nwc yours">PLN ${finalNWC}M</div>
+      <div class="compare-pol">${polLabel(finalNWC)} Policy</div>
     </div>
     <div class="compare-card">
       <div class="compare-company">11 bit studios (2024)</div>
-      <div class="compare-nwc eleven">PLN 65M</div>
-      <div class="compare-policy">Conservative Policy</div>
+      <div class="compare-nwc real11">PLN 65M</div>
+      <div class="compare-pol">Conservative Policy</div>
     </div>
     <div class="compare-card">
       <div class="compare-company">CD Projekt RED (2023)</div>
       <div class="compare-nwc cdp">~PLN 900M</div>
-      <div class="compare-policy">Conservative Policy</div>
+      <div class="compare-pol">Conservative Policy</div>
     </div>`;
 }
 
-// ── STUDENT ────────────────────────────────────────────────────────────────
-function initStudent() {
-  show("landing");
-
-  // Watch join count for landing page
-  onValue(ref(db, `${ROOT}/players`), snap => {
-    const count = Object.keys(snap.val() || {}).length;
-    const el = document.getElementById("join-count");
-    if (el) el.textContent = `${count} board member${count !== 1 ? "s" : ""} already joined`;
-  });
+// ═══════════════════════════════════════════════════════
+// STUDENT RENDER
+// ═══════════════════════════════════════════════════════
+function renderWaiting(state) {
+  const players = Object.values(state.players || {});
+  document.getElementById('wait-count').textContent = players.length;
+  document.getElementById('wait-players-list').innerHTML =
+    players.map(p => `<div class="player-chip"><div class="player-dot"></div>${p.name}</div>`).join('');
 }
 
-window.joinGame = () => {
-  const nameEl = document.getElementById("player-name");
-  const name = nameEl.value.trim();
-  if (!name) { nameEl.focus(); return; }
+function renderVoteScreen(state) {
+  const ri    = state.round;
+  const round = ROUNDS[ri];
+  const nwc   = state.currentNWC || 65;
 
-  const btn = document.getElementById("join-btn");
-  btn.disabled = true;
-  btn.textContent = "Joining...";
+  document.getElementById('s-round-val').textContent  = `${ri + 1} / 4`;
+  document.getElementById('s-nwc-header').textContent = `PLN ${nwc}M`;
+  document.getElementById('s-title').textContent      = round.title;
+  document.getElementById('s-body').textContent       = round.scenario;
 
-  const pRef = push(ref(db, `${ROOT}/players`));
-  playerId = pRef.key;
-  playerName = name;
+  const voted = myVote >= 0;
+  document.getElementById('s-voted').classList.toggle('hidden', !voted);
 
-  set(pRef, { name, joined: Date.now() }).then(() => {
-    document.getElementById("waiting-name").textContent = `👤 ${name}`;
-    show("waiting");
-    watchGameState();
-  });
-};
-
-let lastRound = -1;
-let hasVoted = false;
-
-function watchGameState() {
-  onValue(ref(db, `${ROOT}/state`), snap => {
-    const state = snap.val();
-    if (!state) return;
-
-    if (state.phase === "lobby" || state.phase === "demo") {
-      show("waiting");
-      return;
-    }
-
-    if (state.phase === "round") {
-      const roundChanged = state.round !== lastRound;
-      if (roundChanged) {
-        lastRound = state.round;
-        hasVoted = false;
-      }
-
-      if (state.revealed) {
-        showStudentResult(state);
-      } else if (!hasVoted) {
-        showStudentVote(state);
-      }
-      return;
-    }
-
-    if (state.phase === "summary") {
-      showStudentSummary();
-    }
-  });
-}
-
-function showStudentVote(state) {
-  show("vote-screen");
-  const round = ROUNDS[state.round];
-  document.getElementById("s-round-badge").textContent = `Round ${state.round + 1} of 4`;
-  document.getElementById("s-scenario-title").textContent = round.title;
-  document.getElementById("s-scenario-body").textContent = round.scenario;
-
-  const nwc = state.currentNWC || 65;
-  document.getElementById("s-nwc").textContent = `PLN ${nwc}M`;
-  document.getElementById("s-policy").textContent = getPolicyLabel(nwc);
-
-  document.getElementById("voted-state").classList.add("hidden");
-  const opts = document.getElementById("s-options");
-  opts.classList.remove("hidden");
-  opts.innerHTML = round.options.map((opt, i) => `
-    <button class="option-btn" onclick="submitVote(${state.round}, ${i})">
-      <div class="option-content">
-        <span class="option-letter">${opt.letter}</span>
-        <div class="option-text">
-          <div class="option-main">${opt.main}</div>
-          <div class="option-effect">${opt.effect}</div>
+  if (!voted) {
+    document.getElementById('s-options').innerHTML = round.options.map((opt, i) => `
+      <div class="option-btn-s" onclick="submitVote(${ri}, ${i})" id="opt-btn-${i}">
+        <span class="opt-letter">${opt.letter}</span>
+        <div class="opt-text">
+          <div class="opt-main">${opt.main}</div>
+          <div class="opt-effect">${opt.effect}</div>
         </div>
-      </div>
-    </button>
-  `).join("");
+      </div>`).join('');
+  } else {
+    document.getElementById('s-options').innerHTML = '';
+  }
+}
+
+async function submitVote(roundIdx, optionIdx) {
+  if (myVote >= 0) return;
+  myVote = optionIdx;
+  document.querySelectorAll('.option-btn-s').forEach(b => b.classList.add('disabled'));
+  document.getElementById('s-options').innerHTML = '';
+  document.getElementById('s-voted').classList.remove('hidden');
+  if (_db && playerId) {
+    await _db.ref(ROOT + '/state/votes/' + playerId).set(optionIdx);
+  }
 }
 
 function showStudentResult(state) {
-  show("result-screen");
-  const nwc = state.currentNWC || calcNWC();
-  const pol = getPolicy(nwc);
-  const polLabel = getPolicyLabel(nwc);
-
-  const el = document.getElementById("r-nwc");
-  el.textContent = `PLN ${nwc}M`;
-  el.className = `nwc-big-value ${pol}`;
-
-  const pp = document.getElementById("r-policy");
-  pp.textContent = polLabel;
-  pp.className = `policy-pill ${pol}`;
-
-  document.getElementById("r-title").textContent = `Round ${state.round + 1} complete!`;
-  document.getElementById("r-body").textContent = "The board has decided. Check the main screen for the full breakdown.";
-}
-
-function showStudentSummary() {
-  show("result-screen");
-  document.getElementById("r-title").textContent = "Session Complete!";
-  document.getElementById("r-body").textContent = "Look at the main screen for the full summary and comparison.";
-}
-
-window.submitVote = (round, optionIdx) => {
-  if (hasVoted) return;
-  hasVoted = true;
-
-  // Visual feedback
-  document.querySelectorAll(".option-btn").forEach(b => b.classList.add("disabled"));
-  document.getElementById("s-options").classList.add("hidden");
-  document.getElementById("voted-state").classList.remove("hidden");
-
-  // Submit to Firebase
-  set(ref(db, `${ROOT}/state/votes/${playerId}`), optionIdx);
-};
-
-// ── UTILS ──────────────────────────────────────────────────────────────────
-function show(id) {
-  ["landing","waiting","vote-screen","result-screen","host-view"].forEach(s => {
-    const el = document.getElementById(s);
-    if (el) el.classList.toggle("hidden", s !== id);
-  });
-  // handle vote-screen special (not full screen div)
-  if (id === "vote-screen") {
-    document.getElementById("vote-screen").classList.remove("hidden");
-    document.getElementById("vote-screen").style.display = "";
+  showScreen('result-screen');
+  const nwc = state.currentNWC || 65;
+  const pol = polClass(nwc);
+  document.getElementById('r-nwc-val').textContent = `PLN ${nwc}M`;
+  document.getElementById('r-nwc-val').className   = `result-nwc-val ${pol}`;
+  document.getElementById('r-policy').textContent  = polLabel(nwc);
+  document.getElementById('r-policy').className    = `result-policy ${pol}`;
+  if (state.phase === 'summary') {
+    document.getElementById('r-title').textContent = 'Board Session Complete!';
+    document.getElementById('r-sub').textContent   = 'Check the main screen for the full NWC summary.';
+  } else {
+    document.getElementById('r-title').textContent = `Round ${(state.round||0)+1} complete!`;
+    document.getElementById('r-sub').textContent   = 'The board has decided. Check the main screen →';
   }
 }
+
+// ═══════════════════════════════════════════════════════
+// POLLING — follows Fed game pattern exactly
+// ═══════════════════════════════════════════════════════
+function startPolling() {
+  stopPolling();
+  pollTimer = setInterval(async () => {
+    const state = _liveState;
+    if (!state) return;
+
+    // Detect restart
+    if (state.restartToken && state.restartToken !== lastRestartToken) {
+      if (lastRestartToken !== null) {
+        lastRestartToken = state.restartToken;
+        myName = ''; playerId = ''; myVote = -1; lastRound = -1;
+        localStorage.removeItem('nwc_name');
+        localStorage.removeItem('nwc_id');
+        stopPolling();
+        showScreen('join-screen');
+        showToast('Session restarted — please enter your name again', '');
+        return;
+      }
+      lastRestartToken = state.restartToken;
+    }
+
+    if (isHost) {
+      if (state.phase === 'lobby') renderLobby(state);
+      else if (state.phase === 'round') {
+        if (state.bs) bs = state.bs;
+        if (state.nwcHistory) nwcHistory = state.nwcHistory;
+        renderRoundHost(state);
+      }
+      return;
+    }
+
+    // Student flow
+    if (state.phase === 'lobby' || state.phase === 'demo') {
+      if (!document.getElementById('waiting-screen').classList.contains('active'))
+        showScreen('waiting-screen');
+      renderWaiting(state);
+      return;
+    }
+
+    if (state.phase === 'round') {
+      if (state.round !== lastRound) {
+        lastRound = state.round;
+        myVote = -1;
+        if (state.votes && state.votes[playerId] !== undefined)
+          myVote = state.votes[playerId];
+      }
+      if (state.revealed) { showStudentResult(state); return; }
+      if (!document.getElementById('vote-screen').classList.contains('active'))
+        showScreen('vote-screen');
+      renderVoteScreen(state);
+      return;
+    }
+
+    if (state.phase === 'summary') showStudentResult(state);
+  }, POLL_MS);
+}
+
+function stopPolling() {
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+}
+
+// ═══════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════
+function getWinner(votes) {
+  const totals = [0,0,0];
+  Object.values(votes).forEach(v => { if (v >= 0 && v <= 2) totals[v]++; });
+  return totals.indexOf(Math.max(...totals));
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => { t.className = 'toast'; }, 2800);
+}
+
+document.getElementById('player-name-input').addEventListener('keydown', e => { if (e.key==='Enter') joinGame(); });
+document.getElementById('host-pin-input').addEventListener('keydown',   e => { if (e.key==='Enter') joinAsHost(); });
 </script>
 </body>
 </html>
